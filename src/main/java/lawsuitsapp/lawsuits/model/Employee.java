@@ -14,12 +14,15 @@ public class Employee {
 
     String firstName;
     String lastName;
+
+    // for authentication
     String username;
     String password;
     String role;
 
     // connections
     List<Case> cases;
+    List<Case> createdCases;
     List<Document> documents;
     Credentials credentials;
 

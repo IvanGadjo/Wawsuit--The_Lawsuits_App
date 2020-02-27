@@ -3,6 +3,9 @@ package lawsuitsapp.lawsuits.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+
 @Data
 @NoArgsConstructor
 public class Court {
@@ -14,4 +17,7 @@ public class Court {
     String city;
     String address;
     String phoneNumber;
+
+    // connections
+    List<Document> documents;
 }

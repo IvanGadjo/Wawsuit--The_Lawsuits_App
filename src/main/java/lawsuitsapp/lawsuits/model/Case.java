@@ -36,5 +36,8 @@ public class Case {
     Entity plaintiff;           // tuzitel
     Entity sued;            // tuzen
 
+    //todo: ova e self referencing, najdi kako se pravi
+    List<Case> childCases;
+
 
 }
