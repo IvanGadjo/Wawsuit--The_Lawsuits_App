@@ -21,7 +21,15 @@ public class JWTUserDetailsService implements UserDetailsService{
         if ("javainuse".equals(username)) {
             return new User("javainuse", "$2a$10$slYQmyNdGzTn7ZLBXBChFOC9f6kFjAqPhccnP6DxlWXx2lPk1C3G6",
                     new ArrayList<>());
-        } else {
+        }
+//        else {
+//            throw new UsernameNotFoundException("User not found with username: " + username);
+//        }
+
+        if ("gadjo".equals(username)){
+            return new User("gadjo", "$2a$10$wAdayXtsPo/MOWgnj29gruyVS.PhRE2pCzSfrTNi409pX8/0VBToK",
+                    new ArrayList<>());
+        }else {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
     }
