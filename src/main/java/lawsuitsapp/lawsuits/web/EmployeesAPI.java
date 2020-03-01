@@ -3,10 +3,8 @@ package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
 import lawsuitsapp.lawsuits.model.Employee;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,5 +23,34 @@ public class EmployeesAPI {
     public List<Employee> getAllEmployeesFromRepo(){
         asyncEmployeeService.fillDataBaseAtStart();
         return asyncEmployeeService.getAllEmployeesAsync();
+    }
+
+    @GetMapping("/{id}")
+    public Employee getEmployeeById(@PathVariable int id) throws EmployeeNotFoundException {
+        return asyncEmployeeService.getEmployeeByIdAsync(id);
+    }
+
+    @PostMapping
+    public void addEmployee(@RequestParam("firstName") String firstName,
+                            @RequestParam("lastName") String lastName,
+                            @RequestParam("username") String username,
+                            @RequestParam("password") String password,
+                            @RequestParam("role") String role){
+        Employee newEmployee = new Employee(firstName,lastName,username,password,role);
+        asyncEmployeeService.addEmployeeAsync(newEmployee);
+    }
+
+
+    // edit employee se odnesuva na editiranje na osnovnite podatoci, dodeka pak izmeni vo odnos na dokumentite
+    // se pravat so dr requests (addDocToEmp vo ova api, deleteDoc od DocAPI)
+    @PutMapping("/{oldId}")
+    public void editEmployee(@PathVariable("oldId") int oldId,
+                             @RequestParam("firstName") String firstName,
+                             @RequestParam("lastName") String lastName,
+                             @RequestParam("username") String username,
+                             @RequestParam("password") String password,
+                             @RequestParam("role") String role){
+        Employee editEmployee = new Employee(firstName,lastName,username,password,role);
+        asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
     }
 }

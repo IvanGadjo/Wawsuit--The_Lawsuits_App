@@ -1,6 +1,8 @@
 package lawsuitsapp.lawsuits.service.impl;
 
+import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.EmployeeRepo;
 import lawsuitsapp.lawsuits.service.EmployeeService;
 import org.springframework.stereotype.Service;
@@ -22,25 +24,35 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employeeRepo.getAllEmployees();
     }
 
+    @Override
+    public Employee getEmployeeById(int id) throws EmployeeNotFoundException {
+        return employeeRepo.getEmployeeById(id);
+    }
+
+    @Override
+    public void addEmployee(Employee newEmployee) {
+        employeeRepo.addEmployee(newEmployee);
+    }
+
+
+    @Override
+    public void editEmployee(int oldId, Employee editedEmployee) {
+        employeeRepo.editEmployee(oldId,editedEmployee);
+    }
+
+
+
+
 
     // todo:
-    @Override
-    public Employee getEmployeeById(int id) {
-        return null;
-    }
-
-    @Override
-    public void addEmployee(Employee employee) {
-
-    }
-
-    @Override
-    public void editEmployee(Employee employee) {
-
-    }
 
     @Override
     public void deleteEmployee(Employee employee) {
+
+    }
+
+    @Override
+    public void addDocumentToEmployee(Employee employee, Document docToAdd) {
 
     }
 }

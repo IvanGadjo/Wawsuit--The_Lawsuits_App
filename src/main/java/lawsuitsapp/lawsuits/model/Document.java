@@ -45,7 +45,7 @@ public class Document {
 
 
     public Document(String name, int archiveNumber, boolean isInput,
-                    LocalDate documentDate, String fileType, byte[] data){
+                    LocalDate documentDate, String fileType, byte[] data, Employee employee){
 
         createdAt = new Timestamp(System.currentTimeMillis());
         this.name = name;
@@ -54,6 +54,7 @@ public class Document {
         this.documentDate = documentDate;
         this.fileType = fileType;
         this.data = data;
+        this.createdBy = employee;
     }
 
 }
