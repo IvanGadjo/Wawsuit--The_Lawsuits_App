@@ -1,4 +1,4 @@
-package lawsuitsapp.lawsuits.service;
+package lawsuitsapp.lawsuits.service.jwt;
 
 import java.util.ArrayList;
 import org.springframework.security.core.userdetails.User;

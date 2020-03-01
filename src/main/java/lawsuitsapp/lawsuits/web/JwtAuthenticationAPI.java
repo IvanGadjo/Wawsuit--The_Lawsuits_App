@@ -1,6 +1,6 @@
 package lawsuitsapp.lawsuits.web;
 
-import lawsuitsapp.lawsuits.service.JWTUserDetailsService;
+import lawsuitsapp.lawsuits.service.jwt.JWTUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
