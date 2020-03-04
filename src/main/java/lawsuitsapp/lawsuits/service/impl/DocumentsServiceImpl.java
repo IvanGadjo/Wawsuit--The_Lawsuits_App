@@ -7,6 +7,7 @@ import lawsuitsapp.lawsuits.service.DocumentsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DocumentsServiceImpl implements DocumentsService {
@@ -41,5 +42,10 @@ public class DocumentsServiceImpl implements DocumentsService {
     @Override
     public void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException {
         documentsRepo.editDocument(oldId,newDocument);
+    }
+
+    @Override
+    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) {
+        return documentsRepo.getAllDocumentsOfEmployeeById(employeeId);
     }
 }

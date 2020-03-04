@@ -83,4 +83,9 @@ public class DocumentsAPI {
         Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),employee,court);
         asyncDocumentsService.editDocumentAsync(oldId,editDoc);
     }
+
+    @GetMapping("/ofEmployee/{id}")
+    public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId){
+        return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId);
+    }
 }

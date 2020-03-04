@@ -18,5 +18,4 @@ public interface EmployeeRepo {
 
     void deleteEmployee(int id) throws EmployeeNotFoundException;
 
-    void addDocumentToEmployee(Employee employee, Document docToAdd);   // mozebi treba da e vo doc repo
 }

@@ -17,4 +17,6 @@ public interface DocumentsRepo {
     void deleteDocument(int id) throws DocumentNotFoundException;
 
     void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException;
+
+    List<Document> getAllDocumentsOfEmployeeById(int employeeId);
 }

@@ -8,6 +8,7 @@ import lawsuitsapp.lawsuits.repository.jpa.DocumentsRepoJPA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class DocumentsRepoImpl implements DocumentsRepo {
@@ -46,5 +47,11 @@ public class DocumentsRepoImpl implements DocumentsRepo {
         Document oldDoc = getDocumentById(oldId);
         documentsRepoJPA.delete(oldDoc);
         documentsRepoJPA.save(newDocument);
+    }
+
+    @Override
+    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) {
+        return documentsRepoJPA.findAll().stream().filter(d -> d.getCreatedBy().getID() == employeeId)
+                .collect(Collectors.toList());
     }
 }

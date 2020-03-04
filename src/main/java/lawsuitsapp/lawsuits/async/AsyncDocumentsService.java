@@ -37,4 +37,8 @@ public class AsyncDocumentsService {
     public void editDocumentAsync(int oldId, Document newDocument) throws DocumentNotFoundException {
         documentsService.editDocument(oldId,newDocument);
     }
+
+    public List<Document> getAllDocumentsOfEmployeeByIdAsync(int employeeId){
+        return documentsService.getAllDocumentsOfEmployeeById(employeeId);
+    }
 }

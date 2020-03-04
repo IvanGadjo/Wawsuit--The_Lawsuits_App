@@ -87,17 +87,6 @@ public class EmployeeRepoImpl implements EmployeeRepo {
 
 
 
-
-
-
-    // todo: valjda treba da e vo documents
-    @Override
-    public void addDocumentToEmployee(Employee employee, Document docToAdd) {
-
-    }
-
-
-
     // TODO: OSTANATI
     // -- da ima delete employee no so prefrlanje docs na drug employee
     // -- get all docs from employee
