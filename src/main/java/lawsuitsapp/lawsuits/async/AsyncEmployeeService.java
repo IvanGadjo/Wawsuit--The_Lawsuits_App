@@ -44,14 +44,13 @@ public class AsyncEmployeeService {
     }
 
 
+    public void deleteEmployeeAsync(int id) throws EmployeeNotFoundException {
+        employeeService.deleteEmployee(id);
+    }
+
 
 
     // todo:
-
-
-    public void deleteEmployeeAsync(Employee employee){
-
-    }
 
     public void addDocumentToEmployeeAsync(Employee employee, Document docToAdd){
 

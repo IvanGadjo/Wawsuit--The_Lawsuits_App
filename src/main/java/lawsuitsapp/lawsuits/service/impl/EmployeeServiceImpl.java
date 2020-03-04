@@ -41,15 +41,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
+    @Override
+    public void deleteEmployee(int id) throws EmployeeNotFoundException {
+        employeeRepo.deleteEmployee(id);
+    }
+
 
 
 
     // todo:
-
-    @Override
-    public void deleteEmployee(Employee employee) {
-
-    }
 
     @Override
     public void addDocumentToEmployee(Employee employee, Document docToAdd) {

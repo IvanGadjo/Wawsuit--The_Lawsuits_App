@@ -1,4 +1,4 @@
-package lawsuitsapp.lawsuits.repository;
+package lawsuitsapp.lawsuits.repository.jpa;
 
 import lawsuitsapp.lawsuits.model.Employee;
 import org.springframework.data.jpa.repository.JpaRepository;

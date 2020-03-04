@@ -16,7 +16,7 @@ public interface EmployeeService {
 
     void editEmployee(int oldId, Employee editedEmployee);
 
-    void deleteEmployee(Employee employee);
+    void deleteEmployee(int id) throws EmployeeNotFoundException;
 
     void addDocumentToEmployee(Employee employee, Document docToAdd);
 }

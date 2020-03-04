@@ -41,6 +41,12 @@ public class EmployeesAPI {
     }
 
 
+    @DeleteMapping("/{id}")
+    public void deleteEmployee(@PathVariable("id") int id) throws EmployeeNotFoundException {
+        asyncEmployeeService.deleteEmployeeAsync(id);
+    }
+
+
     // edit employee se odnesuva na editiranje na osnovnite podatoci, dodeka pak izmeni vo odnos na dokumentite
     // se pravat so dr requests (addDocToEmp vo ova api, deleteDoc od DocAPI)
     @PutMapping("/{oldId}")

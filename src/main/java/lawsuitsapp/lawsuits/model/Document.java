@@ -37,7 +37,7 @@ public class Document {
     //int caseNumber;
 
     @JsonIgnore
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeId")
     Employee createdBy;
     //Case caseId;

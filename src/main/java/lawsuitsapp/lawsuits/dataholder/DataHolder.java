@@ -3,14 +3,11 @@ package lawsuitsapp.lawsuits.dataholder;
 
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
-import lawsuitsapp.lawsuits.repository.DocumentsRepoJPA;
-import lawsuitsapp.lawsuits.repository.EmployeeRepo;
-import lawsuitsapp.lawsuits.repository.EmployeeRepoJPA;
+import lawsuitsapp.lawsuits.repository.jpa.DocumentsRepoJPA;
+import lawsuitsapp.lawsuits.repository.jpa.EmployeeRepoJPA;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
 
-import java.sql.Time;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
