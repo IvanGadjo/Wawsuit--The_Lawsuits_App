@@ -1,10 +1,13 @@
 package lawsuitsapp.lawsuits.web;
 
 
+import lawsuitsapp.lawsuits.async.AsyncCourtsService;
 import lawsuitsapp.lawsuits.async.AsyncDocumentsService;
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
+import lawsuitsapp.lawsuits.model.Court;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CourtNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,10 +23,13 @@ public class DocumentsAPI {
 
     AsyncDocumentsService asyncDocumentsService;
     AsyncEmployeeService asyncEmployeeService;
+    AsyncCourtsService asyncCourtsService;
 
-    public DocumentsAPI(AsyncDocumentsService asyncDocumentsService,AsyncEmployeeService asyncEmployeeService){
+    public DocumentsAPI(AsyncDocumentsService asyncDocumentsService,AsyncEmployeeService asyncEmployeeService,
+                        AsyncCourtsService asyncCourtsService){
         this.asyncDocumentsService = asyncDocumentsService;
         this.asyncEmployeeService = asyncEmployeeService;
+        this.asyncCourtsService = asyncCourtsService;
     }
 
     @GetMapping
@@ -44,14 +50,17 @@ public class DocumentsAPI {
                             @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
                             @RequestParam("fileType") String fileType,
                             @RequestParam("data") byte[] data,
-                            @RequestParam("employeeId") int employeeId) throws EmployeeNotFoundException {
+                            @RequestParam("employeeId") int employeeId,
+                            @RequestParam("courtId") int courtId) throws EmployeeNotFoundException, CourtNotFoundException {
 
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-        Document newDocument = new Document(name,archiveNumber,isInput,documentDate,fileType,data,employee);
+        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+
+        Document newDocument = new Document(name,archiveNumber,isInput,documentDate,fileType,data,employee,court);
         asyncDocumentsService.addDocumentAsync(newDocument);
     }
 
-    // todo:
+
 
     @DeleteMapping("/{id}")
     public void deleteDocument(@PathVariable("id") int id) throws DocumentNotFoundException {
@@ -65,10 +74,13 @@ public class DocumentsAPI {
                              @RequestParam("archiveNumber") int archiveNumber,
                              @RequestParam("isInput") boolean isInput,
                              @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
-                             @RequestParam("employeeId") int employeeId) throws DocumentNotFoundException, EmployeeNotFoundException {
+                             @RequestParam("employeeId") int employeeId,
+                             @RequestParam("courtId") int courtId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException {
+
         Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId);
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-        Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),employee);
+        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),employee,court);
         asyncDocumentsService.editDocumentAsync(oldId,editDoc);
     }
 }

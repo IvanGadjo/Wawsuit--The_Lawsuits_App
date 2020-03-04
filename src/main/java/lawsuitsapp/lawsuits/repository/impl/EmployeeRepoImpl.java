@@ -90,7 +90,7 @@ public class EmployeeRepoImpl implements EmployeeRepo {
 
 
 
-    // todo: valjda treba da e u documents
+    // todo: valjda treba da e vo documents
     @Override
     public void addDocumentToEmployee(Employee employee, Document docToAdd) {
 

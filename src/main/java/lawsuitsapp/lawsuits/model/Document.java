@@ -32,20 +32,25 @@ public class Document {
 
     // connections
 
-    //Court court;
-    //@NotBlank
-    //int caseNumber;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "courtId")
+    Court court;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "employeeId")
     Employee createdBy;
+
+
+    //@NotBlank
+    //int caseNumber;
     //Case caseId;
 
 
 
     public Document(String name, int archiveNumber, boolean isInput,
-                    LocalDate documentDate, String fileType, byte[] data, Employee employee){
+                    LocalDate documentDate, String fileType, byte[] data, Employee employee, Court court){
 
         createdAt = new Timestamp(System.currentTimeMillis());
         this.name = name;
@@ -55,6 +60,7 @@ public class Document {
         this.fileType = fileType;
         this.data = data;
         this.createdBy = employee;
+        this.court = court;
     }
 
 }
