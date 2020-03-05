@@ -8,7 +8,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-public class Entity {
+public class LawsuitEntity {
 
     int ID;
 

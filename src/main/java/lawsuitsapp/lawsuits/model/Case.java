@@ -5,12 +5,17 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.List;
+import javax.persistence.*;
+import javax.persistence.Entity;
 
 
+@Entity
 @Data
 @NoArgsConstructor
+@Table(name = "cases")
 public class Case {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     int ID;
 
     int caseNumber;
@@ -26,18 +31,18 @@ public class Case {
 
     // connections
 
-    List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
-    String  proxy;              // polnomosnik (ako e drug covek sto ja tuzi posta)
+    //List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
+    //String proxy;              // polnomosnik (ako e drug covek sto ja tuzi posta)
 
 
-    Employee createdBy;
-    List<Document> documents;
+    //Employee createdBy;
+    //List<Document> documents;
 
-    Entity plaintiff;           // tuzitel
-    Entity sued;            // tuzen
+    //LawsuitEntity plaintiff;           // tuzitel
+    //LawsuitEntity sued;            // tuzen
 
     //todo: ova e self referencing, najdi kako se pravi
-    List<Case> childCases;
+    //List<Case> childCases;
 
 
 }
