@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -36,13 +37,41 @@ public class Case {
 
 
     //Employee createdBy;
-    //List<Document> documents;
+    @OneToMany(mappedBy = "caseId", fetch = FetchType.EAGER)
+    List<Document> documents;
 
     //LawsuitEntity plaintiff;           // tuzitel
     //LawsuitEntity sued;            // tuzen
 
+
+
+
     //todo: ova e self referencing, najdi kako se pravi
-    //List<Case> childCases;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "parent_case_id")
+    Case parentCase;
+
+    @OneToMany(mappedBy = "parentCase")
+    List<Case> childCases;
+
+
+    public Case(int caseNumber,String name,String basis,float value,String phase,boolean isExecuted){
+        this.caseNumber = caseNumber;
+        this.name = name;
+        this.basis = basis;
+        this.value = value;
+        this.phase = phase;
+        this.isExecuted = isExecuted;
+
+        createdAt = new Timestamp(System.currentTimeMillis());
+        childCases = new ArrayList<>();
+        documents = new ArrayList<>();
+    }
+
+    public void addDocument(Document document){
+        documents.add(document);
+    }
 
 
 }

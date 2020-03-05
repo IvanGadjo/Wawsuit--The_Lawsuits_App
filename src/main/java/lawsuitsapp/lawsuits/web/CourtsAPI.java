@@ -40,10 +40,6 @@ public class CourtsAPI {
     }
 
 
-
-    // todo:
-
-
     @PutMapping("/{oldId}")
     public void editCourtInRepo(@PathVariable("oldId") int oldId,
                                 @RequestParam("name")String name,

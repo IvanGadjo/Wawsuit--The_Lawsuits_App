@@ -41,4 +41,12 @@ public class AsyncDocumentsService {
     public List<Document> getAllDocumentsOfEmployeeByIdAsync(int employeeId){
         return documentsService.getAllDocumentsOfEmployeeById(employeeId);
     }
+
+    public void setEmployeeIdToNullAsync(int docId) throws DocumentNotFoundException {
+        documentsService.setEmployeeIdToNull(docId);
+    }
+
+    public void setCaseIdToNullAsync(int docId) throws DocumentNotFoundException {
+        documentsService.setCaseIdToNull(docId);
+    }
 }

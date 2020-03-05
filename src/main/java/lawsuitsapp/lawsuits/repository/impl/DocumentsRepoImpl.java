@@ -54,4 +54,34 @@ public class DocumentsRepoImpl implements DocumentsRepo {
         return documentsRepoJPA.findAll().stream().filter(d -> d.getCreatedBy().getID() == employeeId)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void setEmployeeIdToNull(int docId) throws DocumentNotFoundException {
+        // get the doc
+        Document oldDoc = getDocumentById(docId);
+
+        // delete the doc from repo
+        documentsRepoJPA.deleteById(docId);
+
+        // change the doc (add null to createdBy)
+        oldDoc.setCreatedBy(null);
+
+        // save edited doc in repo
+        documentsRepoJPA.save(oldDoc);
+    }
+
+    @Override
+    public void setCaseIdToNull(int docId) throws DocumentNotFoundException {
+        // get the doc
+        Document oldDoc = getDocumentById(docId);
+
+        // delete the doc from repo
+        documentsRepoJPA.deleteById(docId);
+
+        // change the doc (add null to caseId)
+        oldDoc.setCaseId(null);
+
+        // save edited doc in repo
+        documentsRepoJPA.save(oldDoc);
+    }
 }

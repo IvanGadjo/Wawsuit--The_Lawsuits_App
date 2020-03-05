@@ -86,8 +86,4 @@ public class EmployeeRepoImpl implements EmployeeRepo {
     }
 
 
-
-    // TODO: OSTANATI
-    // -- da ima delete employee no so prefrlanje docs na drug employee
-    // -- get all docs from employee
 }

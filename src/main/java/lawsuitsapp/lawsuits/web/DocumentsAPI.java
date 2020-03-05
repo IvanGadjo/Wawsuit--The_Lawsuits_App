@@ -1,12 +1,15 @@
 package lawsuitsapp.lawsuits.web;
 
 
+import lawsuitsapp.lawsuits.async.AsyncCasesService;
 import lawsuitsapp.lawsuits.async.AsyncCourtsService;
 import lawsuitsapp.lawsuits.async.AsyncDocumentsService;
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
+import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Court;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.CourtNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
@@ -24,12 +27,14 @@ public class DocumentsAPI {
     AsyncDocumentsService asyncDocumentsService;
     AsyncEmployeeService asyncEmployeeService;
     AsyncCourtsService asyncCourtsService;
+    AsyncCasesService asyncCasesService;
 
     public DocumentsAPI(AsyncDocumentsService asyncDocumentsService,AsyncEmployeeService asyncEmployeeService,
-                        AsyncCourtsService asyncCourtsService){
+                        AsyncCourtsService asyncCourtsService, AsyncCasesService asyncCasesService){
         this.asyncDocumentsService = asyncDocumentsService;
         this.asyncEmployeeService = asyncEmployeeService;
         this.asyncCourtsService = asyncCourtsService;
+        this.asyncCasesService = asyncCasesService;
     }
 
     @GetMapping
@@ -51,12 +56,14 @@ public class DocumentsAPI {
                             @RequestParam("fileType") String fileType,
                             @RequestParam("data") byte[] data,
                             @RequestParam("employeeId") int employeeId,
-                            @RequestParam("courtId") int courtId) throws EmployeeNotFoundException, CourtNotFoundException {
+                            @RequestParam("courtId") int courtId,
+                            @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException {
 
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
         Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
-        Document newDocument = new Document(name,archiveNumber,isInput,documentDate,fileType,data,employee,court);
+        Document newDocument = new Document(name,archiveNumber,isInput,documentDate,fileType,data,employee,court,docCase);
         asyncDocumentsService.addDocumentAsync(newDocument);
     }
 
@@ -75,13 +82,27 @@ public class DocumentsAPI {
                              @RequestParam("isInput") boolean isInput,
                              @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
                              @RequestParam("employeeId") int employeeId,
-                             @RequestParam("courtId") int courtId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException {
+                             @RequestParam("courtId") int courtId,
+                             @RequestParam("caseId") int caseId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException {
 
         Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId);
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
         Court court = asyncCourtsService.getCourtByIdAsync(courtId);
-        Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),employee,court);
+        Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
+
+        Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),
+                employee,court,docCase);
         asyncDocumentsService.editDocumentAsync(oldId,editDoc);
+    }
+
+    @PutMapping("/removeCreator/{id}")
+    public void setEmployeeIdToNull(@PathVariable("id") int id) throws DocumentNotFoundException {
+        asyncDocumentsService.setEmployeeIdToNullAsync(id);
+    }
+
+    @PutMapping("/removeCase/{id}")
+    public void setCaseIdToNull(@PathVariable("id") int id) throws DocumentNotFoundException {
+        asyncDocumentsService.setCaseIdToNullAsync(id);
     }
 
     @GetMapping("/ofEmployee/{id}")

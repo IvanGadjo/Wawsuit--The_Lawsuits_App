@@ -48,4 +48,14 @@ public class DocumentsServiceImpl implements DocumentsService {
     public List<Document> getAllDocumentsOfEmployeeById(int employeeId) {
         return documentsRepo.getAllDocumentsOfEmployeeById(employeeId);
     }
+
+    @Override
+    public void setEmployeeIdToNull(int docId) throws DocumentNotFoundException {
+        documentsRepo.setEmployeeIdToNull(docId);
+    }
+
+    @Override
+    public void setCaseIdToNull(int docId) throws DocumentNotFoundException {
+        documentsRepo.setCaseIdToNull(docId);
+    }
 }

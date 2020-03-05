@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -42,15 +42,16 @@ public class Document {
     @JoinColumn(name = "employeeId")
     Employee createdBy;
 
-
-    //@NotBlank
-    //int caseNumber;
-    //Case caseId;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "caseId")
+    //@NotNull
+    Case caseId;
 
 
 
     public Document(String name, int archiveNumber, boolean isInput,
-                    LocalDate documentDate, String fileType, byte[] data, Employee employee, Court court){
+                    LocalDate documentDate, String fileType, byte[] data, Employee employee, Court court, Case caseId){
 
         createdAt = new Timestamp(System.currentTimeMillis());
         this.name = name;
@@ -61,6 +62,7 @@ public class Document {
         this.data = data;
         this.createdBy = employee;
         this.court = court;
+        this.caseId = caseId;
     }
 
 }

@@ -18,4 +18,9 @@ public interface DocumentsService {
     void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException;
 
     List<Document> getAllDocumentsOfEmployeeById(int employeeId);
+
+    // todo: experimental
+    void setEmployeeIdToNull(int docId) throws DocumentNotFoundException;
+
+    void setCaseIdToNull(int docId) throws DocumentNotFoundException;
 }

@@ -40,7 +40,8 @@ public class EmployeesAPI {
         asyncEmployeeService.addEmployeeAsync(newEmployee);
     }
 
-
+    // fixme!!
+    // delete na employee gi brise site documents sto toj gi ima kreirano
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable("id") int id) throws EmployeeNotFoundException {
         asyncEmployeeService.deleteEmployeeAsync(id);
@@ -48,7 +49,7 @@ public class EmployeesAPI {
 
 
     // edit employee se odnesuva na editiranje na osnovnite podatoci, dodeka pak izmeni vo odnos na dokumentite
-    // se pravat so dr requests (addDocToEmp vo ova api, deleteDoc od DocAPI)
+    // se pravat so dr requests (addDoc i deleteDoc od DocAPI)
     @PutMapping("/{oldId}")
     public void editEmployee(@PathVariable("oldId") int oldId,
                              @RequestParam("firstName") String firstName,
@@ -59,4 +60,10 @@ public class EmployeesAPI {
         Employee editEmployee = new Employee(firstName,lastName,username,password,role);
         asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
     }
+
+
+
+
+    // TODO: OSTANATI
+    // -- da ima delete employee no so prefrlanje docs na drug employee
 }
