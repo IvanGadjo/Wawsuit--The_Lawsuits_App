@@ -30,7 +30,10 @@ public class CasesServiceImpl implements CasesService {
         return casesRepo.getCaseById(id);
     }
 
-
+    @Override
+    public void deleteCase(int id) {
+        casesRepo.deleteCase(id);
+    }
 
 
 

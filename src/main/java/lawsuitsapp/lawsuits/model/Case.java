@@ -45,9 +45,6 @@ public class Case {
 
 
 
-
-    //todo: ova e self referencing, najdi kako se pravi
-
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "parent_case_id")
     Case parentCase;

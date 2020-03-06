@@ -19,4 +19,6 @@ public interface CasesRepo {
     void moveDocumentsBetweenCases(int idFrom, int idTo, List<Document> documents);
 
     void changePhaseOfCase(int id, String newPhase);
+
+    void deleteCase(int id);
 }

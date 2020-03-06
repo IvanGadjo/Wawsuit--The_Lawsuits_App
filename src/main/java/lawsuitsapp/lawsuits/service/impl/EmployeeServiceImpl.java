@@ -36,7 +36,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void editEmployee(int oldId, Employee editedEmployee) {
+    public void editEmployee(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
         employeeRepo.editEmployee(oldId,editedEmployee);
     }
 

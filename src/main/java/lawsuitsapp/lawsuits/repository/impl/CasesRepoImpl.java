@@ -3,8 +3,11 @@ package lawsuitsapp.lawsuits.repository.impl;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.repository.CasesRepo;
+import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.repository.jpa.CasesRepoJPA;
+import lawsuitsapp.lawsuits.repository.jpa.DocumentsRepoJPA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,9 +16,11 @@ import java.util.List;
 public class CasesRepoImpl implements CasesRepo {
 
     CasesRepoJPA casesRepoJPA;
+    DocumentsRepo documentsRepo;
 
-    public CasesRepoImpl(CasesRepoJPA casesRepoJPA){
+    public CasesRepoImpl(CasesRepoJPA casesRepoJPA, DocumentsRepo documentsRepo){
         this.casesRepoJPA = casesRepoJPA;
+        this.documentsRepo = documentsRepo;
     }
 
 
@@ -29,6 +34,32 @@ public class CasesRepoImpl implements CasesRepo {
     public Case getCaseById(int id) throws CaseNotFoundException {
         return casesRepoJPA.findById(id).orElseThrow(CaseNotFoundException::new);
     }
+
+
+
+
+    // todo: FIX OVA - NAPRAVI GO ISTO KAKO BRISENJE NA EMPLOYEE
+    @Override
+    public void deleteCase(int id) {
+        // get case
+        Case caseToDelete = casesRepoJPA.getOne(id);
+
+        // set all docs to null
+        caseToDelete.getDocuments().stream().forEach(d -> {
+            try {
+                documentsRepo.setCaseIdToNull(d.getID());
+            } catch (DocumentNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // delete case by id
+        casesRepoJPA.deleteById(id);
+    }
+
+
+
+
 
     // todo:
 

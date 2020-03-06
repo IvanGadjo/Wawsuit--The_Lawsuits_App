@@ -106,7 +106,7 @@ public class DocumentsAPI {
     }
 
     @GetMapping("/ofEmployee/{id}")
-    public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId){
+    public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId) throws EmployeeNotFoundException {
         return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId);
     }
 }

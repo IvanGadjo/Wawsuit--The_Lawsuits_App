@@ -38,15 +38,14 @@ public class CourtsRepoImpl implements CourtsRepo {
         courtsRepoJPA.save(newCourt);
     }
 
+
     @Override
     public void editCourt(int oldId, Court editCourt) throws CourtNotFoundException {
 
-        Court oldCourt = courtsRepoJPA.getOne(oldId);
+        Court oldCourt = getCourtById(oldId);
 
         // get all docs by this court
-        List<Document> documents = documentsRepoJPA.findAll().stream().filter(d ->{
-            return d.getCourt().getID() == oldId;
-        }).collect(Collectors.toList());
+        List<Document> documents = oldCourt.getDocuments();
 
         // delete all docs from repo
         documents.stream().forEach(d -> documentsRepoJPA.delete(d));
@@ -55,6 +54,9 @@ public class CourtsRepoImpl implements CourtsRepo {
         documents.stream().forEach(d ->{
             d.setCourt(editCourt);
         });
+
+        // fetch old court again
+        oldCourt = getCourtById(oldId);
 
         // delete old court
         courtsRepoJPA.delete(oldCourt);

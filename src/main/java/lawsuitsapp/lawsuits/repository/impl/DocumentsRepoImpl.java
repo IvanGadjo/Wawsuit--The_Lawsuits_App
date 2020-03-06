@@ -2,9 +2,12 @@ package lawsuitsapp.lawsuits.repository.impl;
 
 
 import lawsuitsapp.lawsuits.model.Document;
+import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.repository.jpa.DocumentsRepoJPA;
+import lawsuitsapp.lawsuits.repository.jpa.EmployeeRepoJPA;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -14,9 +17,11 @@ import java.util.stream.Collectors;
 public class DocumentsRepoImpl implements DocumentsRepo {
 
     DocumentsRepoJPA documentsRepoJPA;
+    EmployeeRepoJPA employeeRepoJPA;
 
-    public DocumentsRepoImpl(DocumentsRepoJPA documentsRepoJPA){
+    public DocumentsRepoImpl(DocumentsRepoJPA documentsRepoJPA, EmployeeRepoJPA employeeRepoJPA){
         this.documentsRepoJPA = documentsRepoJPA;
+        this.employeeRepoJPA = employeeRepoJPA;
     }
 
     @Override
@@ -50,9 +55,11 @@ public class DocumentsRepoImpl implements DocumentsRepo {
     }
 
     @Override
-    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) {
-        return documentsRepoJPA.findAll().stream().filter(d -> d.getCreatedBy().getID() == employeeId)
-                .collect(Collectors.toList());
+    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException {
+//        return documentsRepoJPA.findAll().stream().filter(d -> d.getCreatedBy().getID() == employeeId)
+//                .collect(Collectors.toList());
+        Employee employee = employeeRepoJPA.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+        return employee.getDocuments();
     }
 
     @Override

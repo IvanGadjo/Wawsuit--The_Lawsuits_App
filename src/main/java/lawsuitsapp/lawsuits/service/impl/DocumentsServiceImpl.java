@@ -2,6 +2,7 @@ package lawsuitsapp.lawsuits.service.impl;
 
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.service.DocumentsService;
 import org.springframework.stereotype.Service;
@@ -45,7 +46,7 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
     @Override
-    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) {
+    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException {
         return documentsRepo.getAllDocumentsOfEmployeeById(employeeId);
     }
 

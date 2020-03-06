@@ -27,6 +27,10 @@ public class AsyncCasesService {
         return casesService.getCaseById(id);
     }
 
+    public void deleteCaseAsync(int id) {
+        casesService.deleteCase(id);
+    }
+
     public void addCaseAsync(Case newCase) {
 
     }

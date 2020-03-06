@@ -56,7 +56,7 @@ public class EmployeesAPI {
                              @RequestParam("lastName") String lastName,
                              @RequestParam("username") String username,
                              @RequestParam("password") String password,
-                             @RequestParam("role") String role){
+                             @RequestParam("role") String role) throws EmployeeNotFoundException {
         Employee editEmployee = new Employee(firstName,lastName,username,password,role);
         asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
     }

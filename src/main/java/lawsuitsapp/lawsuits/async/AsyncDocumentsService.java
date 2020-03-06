@@ -2,6 +2,7 @@ package lawsuitsapp.lawsuits.async;
 
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.DocumentsService;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +39,7 @@ public class AsyncDocumentsService {
         documentsService.editDocument(oldId,newDocument);
     }
 
-    public List<Document> getAllDocumentsOfEmployeeByIdAsync(int employeeId){
+    public List<Document> getAllDocumentsOfEmployeeByIdAsync(int employeeId) throws EmployeeNotFoundException {
         return documentsService.getAllDocumentsOfEmployeeById(employeeId);
     }
 

@@ -41,12 +41,22 @@ public class EmployeeRepoImpl implements EmployeeRepo {
     @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {
 
-        List<Document> documents = documentsRepoJPA.findAll().stream().collect(Collectors.toList());
+//        List<Document> documents = documentsRepoJPA.findAll().stream().collect(Collectors.toList());
 
-        for (Document d:documents){
-            if (d.getCreatedBy().getID() == id)
-                documentsRepoJPA.delete(d);
+//        for (Document d:documents){
+//            if (d.getCreatedBy().getID() == id) {
+//                documentsRepoJPA.delete(d);
+//            }
+//        }
+
+        //  brisi gi site docs od toj emp
+        Employee tmpEmp = getEmployeeById(id);
+        List<Document> docs = tmpEmp.getDocuments();
+        for (Document d:docs){
+            documentsRepoJPA.deleteById(d.getID());
         }
+
+
 
         Employee employeeToDel = getEmployeeById(id);   // ova e najbitniot del sto tuka na krajot go naogjas emp za brisenje
                                                         // da go barase porano, pred da gi izbirses negovite docs ke imase error
@@ -57,15 +67,17 @@ public class EmployeeRepoImpl implements EmployeeRepo {
 
 
     @Override
-    public void editEmployee(int oldId, Employee editedEmployee) {
+    public void editEmployee(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
 
         // mozebi ova treba da go smenis da bide kako vo prethodnata verzija na lawsuits app
-        Employee old = employeeRepoJPA.getOne(oldId);
+        //Employee old = employeeRepoJPA.getOne(oldId);
+        Employee old = getEmployeeById(oldId);
 
         // get all docs from the emp
-        List<Document> documents = documentsRepoJPA.findAll().stream().filter(d ->{
-            return d.getCreatedBy().getID() == oldId;
-        }).collect(Collectors.toList());
+//        List<Document> documents = documentsRepoJPA.findAll().stream().filter(d ->{
+//            return d.getCreatedBy().getID() == oldId;
+//        }).collect(Collectors.toList());
+        List<Document> documents = old.getDocuments();
 
         // delete all docs
         documents.stream().forEach(d -> documentsRepoJPA.delete(d));
@@ -74,6 +86,9 @@ public class EmployeeRepoImpl implements EmployeeRepo {
         documents.stream().forEach(d -> {
             d.setCreatedBy(editedEmployee);
         });
+
+        // fetch the old employee again (this time is without the deleted docs)
+        old = getEmployeeById(oldId);
 
         // delete old emp
         employeeRepoJPA.delete(old);

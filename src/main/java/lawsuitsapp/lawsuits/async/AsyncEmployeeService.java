@@ -39,7 +39,7 @@ public class AsyncEmployeeService {
     }
 
 
-    public void editEmployeeAsync(int oldId, Employee editedEmployee){
+    public void editEmployeeAsync(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
         employeeService.editEmployee(oldId,editedEmployee);
     }
 

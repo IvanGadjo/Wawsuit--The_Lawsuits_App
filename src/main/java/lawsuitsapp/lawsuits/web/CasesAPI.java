@@ -28,4 +28,9 @@ public class CasesAPI {
     public Case getCaseByIdFromRepo(@PathVariable("id") int id) throws CaseNotFoundException {
         return asyncCasesService.getCaseByIdAsync(id);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteCaseFromRepo(@PathVariable("id") int id){
+        asyncCasesService.deleteCaseAsync(id);
+    }
 }
