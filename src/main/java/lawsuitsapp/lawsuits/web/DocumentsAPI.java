@@ -16,6 +16,7 @@ import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
+import javax.print.Doc;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,12 +39,12 @@ public class DocumentsAPI {
     }
 
     @GetMapping
-    public List<Document> getAllDocumentsFromRepo(){
+    public List<Document> getAllDocuments(){
         return asyncDocumentsService.getAllDocumentsAsync();
     }
 
     @GetMapping("/{id}")
-    public Document getDocumentByIdFromRepo(@PathVariable("id") int id) throws DocumentNotFoundException {
+    public Document getDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
         return asyncDocumentsService.getDocumentByIdAsync(id);
     }
 
@@ -108,5 +109,10 @@ public class DocumentsAPI {
     @GetMapping("/ofEmployee/{id}")
     public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId) throws EmployeeNotFoundException {
         return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId);
+    }
+
+    @GetMapping("/ofCase/{id}")
+    public List<Document> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException {
+        return asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId);
     }
 }

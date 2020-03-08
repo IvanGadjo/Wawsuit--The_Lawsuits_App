@@ -20,13 +20,10 @@ import java.util.stream.Collectors;
 public class DocumentsRepoImpl implements DocumentsRepo {
 
     DocumentsRepoJPA documentsRepoJPA;
-    EmployeeRepoJPA employeeRepoJPA;
-    CasesRepoJPA casesRepoJPA;
+
 
     public DocumentsRepoImpl(DocumentsRepoJPA documentsRepoJPA, EmployeeRepoJPA employeeRepoJPA, CasesRepoJPA casesRepoJPA){
         this.documentsRepoJPA = documentsRepoJPA;
-        this.employeeRepoJPA = employeeRepoJPA;
-        this.casesRepoJPA = casesRepoJPA;
     }
 
     @Override
@@ -53,55 +50,55 @@ public class DocumentsRepoImpl implements DocumentsRepo {
 
 
 
+
+
     // samo edit na infoto za document-ot a ne i contentot
-    @Override
-    public void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException {
-        Document oldDoc = getDocumentById(oldId);
-        documentsRepoJPA.delete(oldDoc);
-        documentsRepoJPA.save(newDocument);
-    }
-
-    @Override
-    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException {
-//        return documentsRepoJPA.findAll().stream().filter(d -> d.getCreatedBy().getID() == employeeId)
-//                .collect(Collectors.toList());
-        Employee employee = employeeRepoJPA.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
-        return employee.getDocuments();
-    }
-
-    @Override
-    public List<Document> getAllDocumentsOfCaseById(int caseId) throws CaseNotFoundException {
-        Case theCase = casesRepoJPA.findById(caseId).orElseThrow(CaseNotFoundException::new);
-        return theCase.getDocuments();
-    }
-
-    @Override
-    public void setEmployeeIdToNull(int docId) throws DocumentNotFoundException {
-        // get the doc
-        Document oldDoc = getDocumentById(docId);
-
-        // delete the doc from repo
-        documentsRepoJPA.deleteById(docId);
-
-        // change the doc (add null to createdBy)
-        oldDoc.setCreatedBy(null);
-
-        // save edited doc in repo
-        documentsRepoJPA.save(oldDoc);
-    }
-
-    @Override
-    public void setCaseIdToNull(int docId) throws DocumentNotFoundException {
-        // get the doc
-        Document oldDoc = getDocumentById(docId);
-
-        // delete the doc from repo
-        documentsRepoJPA.deleteById(docId);
-
-        // change the doc (add null to caseId)
-        oldDoc.setCaseId(null);
-
-        // save edited doc in repo
-        documentsRepoJPA.save(oldDoc);
-    }
+    //@Override
+//    public void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException {
+//        Document oldDoc = getDocumentById(oldId);
+//        documentsRepoJPA.delete(oldDoc);
+//        documentsRepoJPA.save(newDocument);
+//    }
+//
+//    //@Override
+//    public List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException {
+//        Employee employee = employeeRepoJPA.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
+//        return employee.getDocuments();
+//    }
+//
+//    //@Override
+//    public List<Document> getAllDocumentsOfCaseById(int caseId) throws CaseNotFoundException {
+//        Case theCase = casesRepoJPA.findById(caseId).orElseThrow(CaseNotFoundException::new);
+//        return theCase.getDocuments();
+//    }
+//
+//    //@Override
+//    public void setEmployeeIdToNull(int docId) throws DocumentNotFoundException {
+//        // get the doc
+//        Document oldDoc = getDocumentById(docId);
+//
+//        // delete the doc from repo
+//        documentsRepoJPA.deleteById(docId);
+//
+//        // change the doc (add null to createdBy)
+//        oldDoc.setCreatedBy(null);
+//
+//        // save edited doc in repo
+//        documentsRepoJPA.save(oldDoc);
+//    }
+//
+//    //@Override
+//    public void setCaseIdToNull(int docId) throws DocumentNotFoundException {
+//        // get the doc
+//        Document oldDoc = getDocumentById(docId);
+//
+//        // delete the doc from repo
+//        documentsRepoJPA.deleteById(docId);
+//
+//        // change the doc (add null to caseId)
+//        oldDoc.setCaseId(null);
+//
+//        // save edited doc in repo
+//        documentsRepoJPA.save(oldDoc);
+//    }
 }

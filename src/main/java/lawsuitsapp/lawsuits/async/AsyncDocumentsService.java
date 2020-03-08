@@ -1,6 +1,7 @@
 package lawsuitsapp.lawsuits.async;
 
 import lawsuitsapp.lawsuits.model.Document;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.DocumentsService;
@@ -41,6 +42,10 @@ public class AsyncDocumentsService {
 
     public List<Document> getAllDocumentsOfEmployeeByIdAsync(int employeeId) throws EmployeeNotFoundException {
         return documentsService.getAllDocumentsOfEmployeeById(employeeId);
+    }
+
+    public List<Document> getAllDocumentsOfCaseByIdAsync(int caseId) throws CaseNotFoundException {
+        return documentsService.getAllDocumentsOfCaseById(caseId);
     }
 
     public void setEmployeeIdToNullAsync(int docId) throws DocumentNotFoundException {

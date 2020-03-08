@@ -18,13 +18,4 @@ public interface DocumentsRepo {
 
     void deleteDocument(int id) throws DocumentNotFoundException;
 
-    void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException;
-
-    List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException;
-
-    void setEmployeeIdToNull(int docId) throws DocumentNotFoundException;
-
-    void setCaseIdToNull(int docId) throws DocumentNotFoundException;
-
-    List<Document> getAllDocumentsOfCaseById(int caseId) throws CaseNotFoundException;
 }

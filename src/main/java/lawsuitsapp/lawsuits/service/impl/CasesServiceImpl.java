@@ -4,19 +4,27 @@ package lawsuitsapp.lawsuits.service.impl;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.repository.CasesRepo;
+import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.service.CasesService;
+import lawsuitsapp.lawsuits.service.DocumentsService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class CasesServiceImpl implements CasesService {
 
     CasesRepo casesRepo;
+    DocumentsRepo documentsRepo;
+    DocumentsService documentsService;
 
-    public CasesServiceImpl(CasesRepo casesRepo){
+    public CasesServiceImpl(CasesRepo casesRepo, DocumentsRepo documentsRepo, DocumentsService documentsService){
         this.casesRepo = casesRepo;
+        this.documentsRepo = documentsRepo;
+        this.documentsService = documentsService;
     }
 
 
@@ -31,45 +39,131 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
-    public void deleteCase(int id) throws CaseNotFoundException {
-        casesRepo.deleteCase(id);
-    }
-
-
-
-
-
-
-    // todo:
-
-    @Override
     public void addCase(Case newCase) {
         casesRepo.addCase(newCase);
     }
 
     @Override
-    public void editCase(int oldId, Case editedCase) throws CaseNotFoundException {
-        casesRepo.editCase(oldId, editedCase);
+    public void deleteCase(int id) throws CaseNotFoundException {
+        Case caseToDelete = casesRepo.getCaseById(id);
+        boolean isParent = true;
+
+        // check if it is a parent case
+        if(caseToDelete.getParentCase() != null)
+            isParent = false;
+
+        if(isParent){       // it is parent
+            List<Case> childCases = getAllCasesByParentCaseId(id);
+
+            // set docIds to null of all child cases
+            childCases.stream().forEach(cc ->{
+                try {
+                    documentsService.getAllDocumentsOfCaseById(cc.getID()).stream().forEach(d ->{
+                        try {
+                            documentsService.setCaseIdToNull(d.getID());
+                        } catch (DocumentNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    });
+                } catch (CaseNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            // re-read child cases (now without docs)
+            childCases = getAllCasesByParentCaseId(id);
+
+            // delete child cases
+            childCases.stream().forEach(cc -> {
+                try {
+                    deleteCase(cc.getID());
+                } catch (CaseNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+
+        // set all caseId to all of the docs to null
+        documentsService.getAllDocumentsOfCaseById(id).stream().forEach(d ->{
+            try {
+                documentsService.setCaseIdToNull(d.getID());
+            } catch (DocumentNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // delete the case
+        casesRepo.deleteCase(id);
     }
 
     @Override
-    public void moveDocumentsBetweenCases(int idTo, List<Integer> documentIds) throws CaseNotFoundException {
-        casesRepo.moveDocumentsBetweenCases(idTo,documentIds);
+    public List<Case> getAllCasesByParentCaseId(int parentCaseId) throws CaseNotFoundException {
+        List<Case> cases = casesRepo.getCaseById(parentCaseId).getChildCases();
+        List<Case> finalList = new ArrayList<>();
+        for (Case c:cases){
+            if(!finalList.contains(c))
+                finalList.add(c);
+        }
+
+        return finalList;
+    }
+
+
+
+    @Override
+    public void editCase(int oldId, Case editedCase) throws CaseNotFoundException {
+        Case oldCase = casesRepo.getCaseById(oldId);
+
+        oldCase.setCaseNumber(editedCase.getCaseNumber());
+        oldCase.setName(editedCase.getName());
+        oldCase.setBasis(editedCase.getBasis());
+        oldCase.setValue(editedCase.getValue());
+        oldCase.setPhase(editedCase.getPhase());
+        oldCase.setExecuted(editedCase.isExecuted());
+
+        casesRepo.addCase(oldCase);
+    }
+
+    @Override
+    public void moveDocumentsBetweenCases(int idTo, List<Integer> documentIds) {
+        List<Document> documents = new ArrayList<>();
+
+        // get all documents
+        documentIds.stream().forEach(di -> {
+            try {
+                documents.add(documentsService.getDocumentById(di));
+            } catch (DocumentNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // change the caseId of all the docs
+        documents.stream().forEach(d -> {
+            try {
+                d.setCaseId(casesRepo.getCaseById(idTo));
+            } catch (CaseNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // save the docs (updated)
+        documents.stream().forEach(d -> documentsService.addDocument(d));
+
     }
 
     @Override
     public void changePhaseOfCase(int id, String newPhase) throws CaseNotFoundException {
-        casesRepo.changePhaseOfCase(id,newPhase);
+        Case oldCase = casesRepo.getCaseById(id);
+
+        oldCase.setPhase(newPhase);
+
+        casesRepo.addCase(oldCase);
     }
 
     @Override
     public void changeParentCaseOfCase(int caseId, int parentCaseId) {
 
-    }
-
-    @Override
-    public List<Case> getAllCasesByParentCaseId(int parentCaseId) throws CaseNotFoundException {
-        return casesRepo.getAllCasesByParentCaseId(parentCaseId);
     }
 
 }

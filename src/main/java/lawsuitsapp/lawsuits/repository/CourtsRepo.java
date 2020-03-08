@@ -13,7 +13,5 @@ public interface CourtsRepo {
 
     void addCourt(Court newCourt);
 
-    void editCourt(int oldId, Court editCourt) throws CourtNotFoundException;
-
     void deleteCourt(int id);
 }

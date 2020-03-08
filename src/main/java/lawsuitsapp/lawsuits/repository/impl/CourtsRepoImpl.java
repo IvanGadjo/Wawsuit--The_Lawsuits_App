@@ -16,11 +16,9 @@ import java.util.stream.Collectors;
 public class CourtsRepoImpl implements CourtsRepo {
 
     CourtsRepoJPA courtsRepoJPA;
-    DocumentsRepoJPA documentsRepoJPA;
 
     public CourtsRepoImpl(CourtsRepoJPA courtsRepoJPA,DocumentsRepoJPA documentsRepoJPA){
         this.courtsRepoJPA = courtsRepoJPA;
-        this.documentsRepoJPA = documentsRepoJPA;
     }
 
     @Override
@@ -38,18 +36,27 @@ public class CourtsRepoImpl implements CourtsRepo {
         courtsRepoJPA.save(newCourt);
     }
 
+    // todo: not implemented
 
+    // koga se brise court treba site docs sto se od nego da im se stavi null vo nivnata tabela
     @Override
-    public void editCourt(int oldId, Court editCourt) throws CourtNotFoundException {
+    public void deleteCourt(int id) {
 
-        Court oldCourt = getCourtById(oldId);
-        oldCourt.setName(editCourt.getName());
-        oldCourt.setType(editCourt.getType());
-        oldCourt.setCity(editCourt.getCity());
-        oldCourt.setAddress(editCourt.getAddress());
-        oldCourt.setPhoneNumber(editCourt.getPhoneNumber());
+    }
 
-        addCourt(oldCourt);
+
+
+
+//    public void editCourt(int oldId, Court editCourt) throws CourtNotFoundException {
+//
+//        Court oldCourt = getCourtById(oldId);
+//        oldCourt.setName(editCourt.getName());
+//        oldCourt.setType(editCourt.getType());
+//        oldCourt.setCity(editCourt.getCity());
+//        oldCourt.setAddress(editCourt.getAddress());
+//        oldCourt.setPhoneNumber(editCourt.getPhoneNumber());
+//
+//        addCourt(oldCourt);
 
 
 //        Court oldCourt = getCourtById(oldId);
@@ -104,14 +111,7 @@ public class CourtsRepoImpl implements CourtsRepo {
 //
 //        // save the docs
 //        documentsRepoJPA.saveAll(documents);
-    }
+//    }
 
 
-
-    // todo: not implemented
-    // koga se brise court treba site docs sto se od nego da im se stavi null vo nivnata tabela
-    @Override
-    public void deleteCourt(int id) {
-
-    }
 }

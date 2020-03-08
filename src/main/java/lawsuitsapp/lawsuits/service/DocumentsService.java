@@ -1,6 +1,7 @@
 package lawsuitsapp.lawsuits.service;
 
 import lawsuitsapp.lawsuits.model.Document;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 
@@ -20,7 +21,8 @@ public interface DocumentsService {
 
     List<Document> getAllDocumentsOfEmployeeById(int employeeId) throws EmployeeNotFoundException;
 
-    // todo: experimental
+    List<Document> getAllDocumentsOfCaseById(int caseId) throws CaseNotFoundException;
+
     void setEmployeeIdToNull(int docId) throws DocumentNotFoundException;
 
     void setCaseIdToNull(int docId) throws DocumentNotFoundException;

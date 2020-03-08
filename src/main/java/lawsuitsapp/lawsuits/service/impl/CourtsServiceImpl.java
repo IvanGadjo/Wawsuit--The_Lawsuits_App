@@ -35,7 +35,14 @@ public class CourtsServiceImpl implements CourtsService {
 
     @Override
     public void editCourt(int oldId, Court editCourt) throws CourtNotFoundException {
-        courtsRepo.editCourt(oldId,editCourt);
+        Court oldCourt = getCourtById(oldId);
+        oldCourt.setName(editCourt.getName());
+        oldCourt.setType(editCourt.getType());
+        oldCourt.setCity(editCourt.getCity());
+        oldCourt.setAddress(editCourt.getAddress());
+        oldCourt.setPhoneNumber(editCourt.getPhoneNumber());
+
+        courtsRepo.addCourt(oldCourt);
     }
 
     @Override
