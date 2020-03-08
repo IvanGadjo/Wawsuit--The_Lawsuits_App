@@ -1,5 +1,6 @@
 package lawsuitsapp.lawsuits.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -45,11 +46,12 @@ public class Case {
 
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "parent_case_id")
     Case parentCase;
 
-    @OneToMany(mappedBy = "parentCase")
+    @JsonIgnore
+    @OneToMany(mappedBy = "parentCase", fetch = FetchType.EAGER)
     List<Case> childCases;
 
 

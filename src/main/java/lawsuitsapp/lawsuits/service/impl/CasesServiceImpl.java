@@ -31,9 +31,12 @@ public class CasesServiceImpl implements CasesService {
     }
 
     @Override
-    public void deleteCase(int id) {
+    public void deleteCase(int id) throws CaseNotFoundException {
         casesRepo.deleteCase(id);
     }
+
+
+
 
 
 
@@ -41,22 +44,32 @@ public class CasesServiceImpl implements CasesService {
 
     @Override
     public void addCase(Case newCase) {
+        casesRepo.addCase(newCase);
+    }
+
+    @Override
+    public void editCase(int oldId, Case editedCase) throws CaseNotFoundException {
+        casesRepo.editCase(oldId, editedCase);
+    }
+
+    @Override
+    public void moveDocumentsBetweenCases(int idTo, List<Integer> documentIds) throws CaseNotFoundException {
+        casesRepo.moveDocumentsBetweenCases(idTo,documentIds);
+    }
+
+    @Override
+    public void changePhaseOfCase(int id, String newPhase) throws CaseNotFoundException {
+        casesRepo.changePhaseOfCase(id,newPhase);
+    }
+
+    @Override
+    public void changeParentCaseOfCase(int caseId, int parentCaseId) {
 
     }
 
     @Override
-    public void editCase(int oldId, Case editedCase) {
-
-    }
-
-    @Override
-    public void moveDocumentsBetweenCases(int idFrom, int idTo, List<Document> documents) {
-
-    }
-
-    @Override
-    public void changePhaseOfCase(int id, String newPhase) {
-
+    public List<Case> getAllCasesByParentCaseId(int parentCaseId) throws CaseNotFoundException {
+        return casesRepo.getAllCasesByParentCaseId(parentCaseId);
     }
 
 }

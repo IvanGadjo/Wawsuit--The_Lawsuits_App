@@ -27,23 +27,27 @@ public class AsyncCasesService {
         return casesService.getCaseById(id);
     }
 
-    public void deleteCaseAsync(int id) {
+    public void deleteCaseAsync(int id) throws CaseNotFoundException {
         casesService.deleteCase(id);
     }
 
     public void addCaseAsync(Case newCase) {
-
+        casesService.addCase(newCase);
     }
 
-    public void editCaseAsync(int oldId, Case editedCase) {
-
+    public void editCaseAsync(int oldId, Case editedCase) throws CaseNotFoundException {
+        casesService.editCase(oldId,editedCase);
     }
 
-    public void moveDocumentsBetweenCasesAsync(int idFrom, int idTo, List<Document> documents) {
-
+    public void moveDocumentsBetweenCasesAsync(int idTo, List<Integer> documentIds) throws CaseNotFoundException {
+        casesService.moveDocumentsBetweenCases(idTo,documentIds);
     }
 
-    public void changePhaseOfCaseAsync(int id, String newPhase) {
+    public void changePhaseOfCaseAsync(int id, String newPhase) throws CaseNotFoundException {
+        casesService.changePhaseOfCase(id,newPhase);
+    }
 
+    public List<Case> getAllCasesByParentCaseIdAsync(int parentCaseId) throws CaseNotFoundException {
+        return casesService.getAllCasesByParentCaseId(parentCaseId);
     }
 }

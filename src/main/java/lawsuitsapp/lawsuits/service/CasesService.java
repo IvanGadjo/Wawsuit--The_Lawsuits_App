@@ -14,11 +14,15 @@ public interface CasesService {
 
     void addCase(Case newCase);
 
-    void editCase(int oldId,Case editedCase);
+    void editCase(int oldId,Case editedCase) throws CaseNotFoundException;
 
-    void moveDocumentsBetweenCases(int idFrom, int idTo, List<Document> documents);
+    void moveDocumentsBetweenCases(int idTo, List<Integer> documentIds) throws CaseNotFoundException;
 
-    void changePhaseOfCase(int id, String newPhase);
+    void changePhaseOfCase(int id, String newPhase) throws CaseNotFoundException;
 
-    void deleteCase(int id);
+    void deleteCase(int id) throws CaseNotFoundException;
+
+    void changeParentCaseOfCase(int caseId, int parentCaseId);
+
+    List<Case> getAllCasesByParentCaseId(int parentCaseId) throws CaseNotFoundException;
 }

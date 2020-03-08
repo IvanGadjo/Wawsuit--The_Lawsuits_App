@@ -1,11 +1,14 @@
 package lawsuitsapp.lawsuits.repository.impl;
 
 
+import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.DocumentsRepo;
+import lawsuitsapp.lawsuits.repository.jpa.CasesRepoJPA;
 import lawsuitsapp.lawsuits.repository.jpa.DocumentsRepoJPA;
 import lawsuitsapp.lawsuits.repository.jpa.EmployeeRepoJPA;
 import org.springframework.stereotype.Repository;
@@ -18,10 +21,12 @@ public class DocumentsRepoImpl implements DocumentsRepo {
 
     DocumentsRepoJPA documentsRepoJPA;
     EmployeeRepoJPA employeeRepoJPA;
+    CasesRepoJPA casesRepoJPA;
 
-    public DocumentsRepoImpl(DocumentsRepoJPA documentsRepoJPA, EmployeeRepoJPA employeeRepoJPA){
+    public DocumentsRepoImpl(DocumentsRepoJPA documentsRepoJPA, EmployeeRepoJPA employeeRepoJPA, CasesRepoJPA casesRepoJPA){
         this.documentsRepoJPA = documentsRepoJPA;
         this.employeeRepoJPA = employeeRepoJPA;
+        this.casesRepoJPA = casesRepoJPA;
     }
 
     @Override
@@ -46,6 +51,8 @@ public class DocumentsRepoImpl implements DocumentsRepo {
         documentsRepoJPA.delete(docToDelete);
     }
 
+
+
     // samo edit na infoto za document-ot a ne i contentot
     @Override
     public void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException {
@@ -60,6 +67,12 @@ public class DocumentsRepoImpl implements DocumentsRepo {
 //                .collect(Collectors.toList());
         Employee employee = employeeRepoJPA.findById(employeeId).orElseThrow(EmployeeNotFoundException::new);
         return employee.getDocuments();
+    }
+
+    @Override
+    public List<Document> getAllDocumentsOfCaseById(int caseId) throws CaseNotFoundException {
+        Case theCase = casesRepoJPA.findById(caseId).orElseThrow(CaseNotFoundException::new);
+        return theCase.getDocuments();
     }
 
     @Override

@@ -43,29 +43,39 @@ public class CourtsRepoImpl implements CourtsRepo {
     public void editCourt(int oldId, Court editCourt) throws CourtNotFoundException {
 
         Court oldCourt = getCourtById(oldId);
+        oldCourt.setName(editCourt.getName());
+        oldCourt.setType(editCourt.getType());
+        oldCourt.setCity(editCourt.getCity());
+        oldCourt.setAddress(editCourt.getAddress());
+        oldCourt.setPhoneNumber(editCourt.getPhoneNumber());
 
-        // get all docs by this court
-        List<Document> documents = oldCourt.getDocuments();
+        addCourt(oldCourt);
 
-        // delete all docs from repo
-        documents.stream().forEach(d -> documentsRepoJPA.delete(d));
 
-        // change the docs list to have the new court as a court
-        documents.stream().forEach(d ->{
-            d.setCourt(editCourt);
-        });
-
-        // fetch old court again
-        oldCourt = getCourtById(oldId);
-
-        // delete old court
-        courtsRepoJPA.delete(oldCourt);
-
-        // save new court
-        courtsRepoJPA.save(editCourt);
-
-        // save the docs
-        documentsRepoJPA.saveAll(documents);
+//        Court oldCourt = getCourtById(oldId);
+//
+//        // get all docs by this court
+//        List<Document> documents = oldCourt.getDocuments();
+//
+//        // delete all docs from repo
+//        documents.stream().forEach(d -> documentsRepoJPA.delete(d));
+//
+//        // change the docs list to have the new court as a court
+//        documents.stream().forEach(d ->{
+//            d.setCourt(editCourt);
+//        });
+//
+//        // fetch old court again
+//        oldCourt = getCourtById(oldId);
+//
+//        // delete old court
+//        courtsRepoJPA.delete(oldCourt);
+//
+//        // save new court
+//        courtsRepoJPA.save(editCourt);
+//
+//        // save the docs
+//        documentsRepoJPA.saveAll(documents);
 
         // todo: Na ovoj nacin mozes isto, ova e so findById mesto so getOne za naogjanje na oldCourt
 
@@ -95,6 +105,8 @@ public class CourtsRepoImpl implements CourtsRepo {
 //        // save the docs
 //        documentsRepoJPA.saveAll(documents);
     }
+
+
 
     // todo: not implemented
     // koga se brise court treba site docs sto se od nego da im se stavi null vo nivnata tabela
