@@ -3,7 +3,10 @@ package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncCasesService;
 import lawsuitsapp.lawsuits.model.Case;
+import lawsuitsapp.lawsuits.model.LawsuitEntity;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.LawsuitEntityNotFoundException;
+import lawsuitsapp.lawsuits.repository.jpa.LawsuitEntitiesJPA;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -16,8 +19,12 @@ public class CasesAPI {
 
     AsyncCasesService asyncCasesService;
 
-    public CasesAPI(AsyncCasesService asyncCasesService){
+    // todo: priveremeno samo
+    LawsuitEntitiesJPA lawsuitEntitiesJPA;
+
+    public CasesAPI(AsyncCasesService asyncCasesService, LawsuitEntitiesJPA lawsuitEntitiesJPA){
         this.asyncCasesService = asyncCasesService;
+        this.lawsuitEntitiesJPA = lawsuitEntitiesJPA;
     }
 
     @GetMapping
@@ -52,9 +59,14 @@ public class CasesAPI {
                               @RequestParam("value") float value,
                               @RequestParam("phase") String phase,
                               @RequestParam("isExecuted")boolean isExecuted,
-                              @RequestParam("parentCaseId") String parentCaseId) throws CaseNotFoundException {
+                              @RequestParam("parentCaseId") String parentCaseId,
+                              @RequestParam("plaintiffId") int plaintiffId,
+                              @RequestParam("suedId") int suedId) throws CaseNotFoundException, LawsuitEntityNotFoundException {
 
-        Case newCase = new Case(caseNumber,name,basis,value,phase,isExecuted);
+        LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
+        LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+
+        Case newCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued);
 
         // set the parent case
         if(!parentCaseId.equals("/")){
@@ -71,8 +83,13 @@ public class CasesAPI {
                                @RequestParam("basis") String basis,
                                @RequestParam("value") float value,
                                @RequestParam("phase") String phase,
-                               @RequestParam("isExecuted")boolean isExecuted) throws CaseNotFoundException {
-        Case editedCase = new Case(caseNumber,name,basis,value,phase,isExecuted);
+                               @RequestParam("isExecuted")boolean isExecuted,
+                               @RequestParam("plaintiffId") int plaintiffId,
+                               @RequestParam("suedId") int suedId) throws CaseNotFoundException, LawsuitEntityNotFoundException {
+        LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
+        LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+
+        Case editedCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued);
         asyncCasesService.editCaseAsync(oldId,editedCase);
     }
 

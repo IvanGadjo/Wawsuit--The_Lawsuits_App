@@ -25,4 +25,8 @@ public interface CasesService {
     void changeParentCaseOfCase(int caseId, int parentCaseId);
 
     List<Case> getAllCasesByParentCaseId(int parentCaseId) throws CaseNotFoundException;
+
+    void setPlaintiffToNull(int caseId) throws CaseNotFoundException;
+
+    void setSuedToNull(int caseId) throws CaseNotFoundException;
 }

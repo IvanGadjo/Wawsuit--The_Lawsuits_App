@@ -51,10 +51,6 @@ public class DocumentsServiceImpl implements DocumentsService {
     }
 
 
-    // todo:
-
-
-
     @Override
     public void editDocument(int oldId, Document newDocument) throws DocumentNotFoundException {
         //documentsRepo.editDocument(oldId,newDocument);
@@ -67,6 +63,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         docToEdit.setData(newDocument.getData());
         docToEdit.setCaseId(newDocument.getCaseId());
         docToEdit.setCreatedBy(newDocument.getCreatedBy());
+        docToEdit.setCourt(newDocument.getCourt());     // todo: new
 
         documentsRepo.addDocument(docToEdit);
     }

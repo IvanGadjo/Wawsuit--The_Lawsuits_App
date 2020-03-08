@@ -58,44 +58,44 @@ public class DataHolder {
 
 
         // cases
-        Case pCase = new Case(11,"firstCase","basis1",200,"first",false);
-
-        Case cCase1 = new Case(12,"secondCase","basis2",220,"first",false);
-        Case cCase2 = new Case(13,"thirdCase","basis3",270,"first",false);
-
-        cCase1.setParentCase(pCase);
-        cCase2.setParentCase(pCase);
+//        Case pCase = new Case(11,"firstCase","basis1",200,"first",false);
+//
+//        Case cCase1 = new Case(12,"secondCase","basis2",220,"first",false);
+//        Case cCase2 = new Case(13,"thirdCase","basis3",270,"first",false);
+//
+//        cCase1.setParentCase(pCase);
+//        cCase2.setParentCase(pCase);
 
 
         // documents
-        Document doc1 = new Document("firstDoc",101,true,
-                LocalDate.of(2020,1,1),".docx",null,emp1,c1,pCase);
-        Document doc2 = new Document("secondDoc",102,false,
-                LocalDate.of(2020,1,2),".docx",null,emp2,c1,cCase1);
-        Document doc3 = new Document("thirdDoc",103,true,
-                LocalDate.of(2020,1,3),".docx",null,emp2,c1,cCase1);
+//        Document doc1 = new Document("firstDoc",101,true,
+//                LocalDate.of(2020,1,1),".docx",null,emp1,c1,pCase);
+//        Document doc2 = new Document("secondDoc",102,false,
+//                LocalDate.of(2020,1,2),".docx",null,emp2,c1,cCase1);
+//        Document doc3 = new Document("thirdDoc",103,true,
+//                LocalDate.of(2020,1,3),".docx",null,emp2,c1,cCase1);
 
 
 
 
 
-        emp1.addDocument(doc1);
-        emp2.addDocument(doc2);
-        emp2.addDocument(doc3);
-
-
-        initialEmployees.add(emp1);
-        initialEmployees.add(emp2);
-
-        initialDocs.add(doc1);
-        initialDocs.add(doc2);
-        initialDocs.add(doc3);
-
-        initialCourts.add(c1);
-
-        initialCases.add(pCase);
-        initialCases.add(cCase1);
-        initialCases.add(cCase2);
+//        emp1.addDocument(doc1);
+//        emp2.addDocument(doc2);
+//        emp2.addDocument(doc3);
+//
+//
+//        initialEmployees.add(emp1);
+//        initialEmployees.add(emp2);
+//
+//        initialDocs.add(doc1);
+//        initialDocs.add(doc2);
+//        initialDocs.add(doc3);
+//
+//        initialCourts.add(c1);
+//
+//        initialCases.add(pCase);
+//        initialCases.add(cCase1);
+//        initialCases.add(cCase2);
     }
 
     public void fillDBAtStart(){

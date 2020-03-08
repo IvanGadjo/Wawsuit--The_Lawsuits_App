@@ -121,6 +121,8 @@ public class CasesServiceImpl implements CasesService {
         oldCase.setValue(editedCase.getValue());
         oldCase.setPhase(editedCase.getPhase());
         oldCase.setExecuted(editedCase.isExecuted());
+        oldCase.setPlaintiff(editedCase.getPlaintiff());
+        oldCase.setSued(editedCase.getSued());
 
         casesRepo.addCase(oldCase);
     }
@@ -159,6 +161,20 @@ public class CasesServiceImpl implements CasesService {
         oldCase.setPhase(newPhase);
 
         casesRepo.addCase(oldCase);
+    }
+
+    @Override
+    public void setPlaintiffToNull(int caseId) throws CaseNotFoundException {
+        Case theCase = casesRepo.getCaseById(caseId);
+        theCase.setPlaintiff(null);
+        casesRepo.addCase(theCase);
+    }
+
+    @Override
+    public void setSuedToNull(int caseId) throws CaseNotFoundException{
+        Case theCase = casesRepo.getCaseById(caseId);
+        theCase.setSued(null);
+        casesRepo.addCase(theCase);
     }
 
     @Override

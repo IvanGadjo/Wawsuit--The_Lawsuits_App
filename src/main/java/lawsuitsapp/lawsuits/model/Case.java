@@ -41,8 +41,13 @@ public class Case {
     @OneToMany(mappedBy = "caseId", fetch = FetchType.EAGER)
     List<Document> documents;
 
-    //LawsuitEntity plaintiff;           // tuzitel
-    //LawsuitEntity sued;            // tuzen
+    @JsonIgnore
+    @ManyToOne
+    LawsuitEntity plaintiff;           // tuzitel
+
+    @JsonIgnore
+    @ManyToOne
+    LawsuitEntity sued;            // tuzen
 
 
 
@@ -55,13 +60,16 @@ public class Case {
     List<Case> childCases;
 
 
-    public Case(int caseNumber,String name,String basis,float value,String phase,boolean isExecuted){
+    public Case(int caseNumber,String name,String basis,float value,String phase,boolean isExecuted,
+                LawsuitEntity plaintiff, LawsuitEntity sued){
         this.caseNumber = caseNumber;
         this.name = name;
         this.basis = basis;
         this.value = value;
         this.phase = phase;
         this.isExecuted = isExecuted;
+        this.plaintiff = plaintiff;
+        this.sued = sued;
 
         createdAt = new Timestamp(System.currentTimeMillis());
         childCases = new ArrayList<>();
