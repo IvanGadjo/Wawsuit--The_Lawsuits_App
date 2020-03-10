@@ -3,6 +3,8 @@ package lawsuitsapp.lawsuits.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -27,11 +29,22 @@ public class Employee {
     String role;
 
     // connections
-    //List<Case> cases;
-    //List<Case> createdCases;
+    //fixme
+    @ManyToMany(fetch = FetchType.EAGER)
+    List<Case> cases;
+
+    //fixme
+    @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)             // radi ova se poprava problemot so MultipleBagFetchException https://stackoverflow.com/questions/4334970/hibernate-throws-multiplebagfetchexception-cannot-simultaneously-fetch-multipl
+    List<Case> createdCases;
+
     @OneToMany(mappedBy = "createdBy",fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     List<Document> documents;
     //Credentials credentials;
+
+
+
 
 
     public Employee(String firstName,String lastName,String username,String password,String role){
@@ -42,6 +55,8 @@ public class Employee {
         this.role = role;
 
         documents = new ArrayList<>();
+        cases = new ArrayList<>();
+        createdCases = new ArrayList<>();
     }
 
     public void addDocument(Document document){

@@ -3,6 +3,10 @@ package lawsuitsapp.lawsuits.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -33,12 +37,22 @@ public class Case {
 
     // connections
 
-    //List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
-    //String proxy;              // polnomosnik (ako e drug covek sto ja tuzi posta)
+    //fixme    koga ke uncomment vidi konstruktor
+    @JsonIgnore
+    @ManyToMany(mappedBy = "cases", fetch = FetchType.EAGER)
+    List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
 
+    //fixme
+    String proxy;              // polnomosnik (ako e drug covek sto ja tuzi posta)
 
-    //Employee createdBy;
+    //fixme
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_creator_Id")
+    Employee createdBy;
+
     @OneToMany(mappedBy = "caseId", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     List<Document> documents;
 
     @JsonIgnore
@@ -57,11 +71,12 @@ public class Case {
 
     @JsonIgnore
     @OneToMany(mappedBy = "parentCase", fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     List<Case> childCases;
 
 
     public Case(int caseNumber,String name,String basis,float value,String phase,boolean isExecuted,
-                LawsuitEntity plaintiff, LawsuitEntity sued){
+                LawsuitEntity plaintiff, LawsuitEntity sued, Employee createdBy, String proxy){
         this.caseNumber = caseNumber;
         this.name = name;
         this.basis = basis;
@@ -70,10 +85,13 @@ public class Case {
         this.isExecuted = isExecuted;
         this.plaintiff = plaintiff;
         this.sued = sued;
+        this.createdBy = createdBy;
+        this.proxy = proxy;
 
         createdAt = new Timestamp(System.currentTimeMillis());
         childCases = new ArrayList<>();
         documents = new ArrayList<>();
+        employees = new ArrayList<>();
     }
 
     public void addDocument(Document document){

@@ -40,7 +40,7 @@ public class EmployeesAPI {
         asyncEmployeeService.addEmployeeAsync(newEmployee);
     }
 
-    // fixme!!
+
     // delete na employee gi brise site documents sto toj gi ima kreirano
     @DeleteMapping("/{id}")
     public void deleteEmployee(@PathVariable("id") int id) throws EmployeeNotFoundException {
@@ -66,4 +66,5 @@ public class EmployeesAPI {
 
     // TODO: OSTANATI
     // -- da ima delete employee no so prefrlanje docs na drug employee
+    // -- move cases between employees
 }

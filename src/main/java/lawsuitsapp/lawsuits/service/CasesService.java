@@ -29,4 +29,6 @@ public interface CasesService {
     void setPlaintiffToNull(int caseId) throws CaseNotFoundException;
 
     void setSuedToNull(int caseId) throws CaseNotFoundException;
+
+    void setEmployeeCreatorToNull(int caseId) throws CaseNotFoundException;
 }

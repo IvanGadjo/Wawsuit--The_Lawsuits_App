@@ -43,6 +43,10 @@ public class CasesServiceImpl implements CasesService {
         casesRepo.addCase(newCase);
     }
 
+
+    /*
+    fixme: sredi to se desava so lawsuitEntities(mislam ne treba niso za ova da se sredi), employees
+     */
     @Override
     public void deleteCase(int id) throws CaseNotFoundException {
         Case caseToDelete = casesRepo.getCaseById(id);
@@ -110,7 +114,7 @@ public class CasesServiceImpl implements CasesService {
     }
 
 
-
+    // fixme: OK
     @Override
     public void editCase(int oldId, Case editedCase) throws CaseNotFoundException {
         Case oldCase = casesRepo.getCaseById(oldId);
@@ -123,6 +127,8 @@ public class CasesServiceImpl implements CasesService {
         oldCase.setExecuted(editedCase.isExecuted());
         oldCase.setPlaintiff(editedCase.getPlaintiff());
         oldCase.setSued(editedCase.getSued());
+        oldCase.setCreatedBy(editedCase.getCreatedBy());
+        oldCase.setProxy(editedCase.getProxy());
 
         casesRepo.addCase(oldCase);
     }
@@ -177,6 +183,14 @@ public class CasesServiceImpl implements CasesService {
         casesRepo.addCase(theCase);
     }
 
+    @Override
+    public void setEmployeeCreatorToNull(int caseId) throws CaseNotFoundException {
+        Case theCase = getCaseById(caseId);
+        theCase.setCreatedBy(null);
+        casesRepo.addCase(theCase);
+    }
+
+    // todo: implement
     @Override
     public void changeParentCaseOfCase(int caseId, int parentCaseId) {
 

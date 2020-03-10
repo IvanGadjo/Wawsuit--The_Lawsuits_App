@@ -2,10 +2,12 @@ package lawsuitsapp.lawsuits.service.impl;
 
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.repository.EmployeeRepo;
+import lawsuitsapp.lawsuits.service.CasesService;
 import lawsuitsapp.lawsuits.service.EmployeeService;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,16 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     EmployeeRepo employeeRepo;
+    // todo: change to service
     DocumentsRepo documentsRepo;
+    CasesService casesService;
 
-    public EmployeeServiceImpl(EmployeeRepo employeeRepo, DocumentsRepo documentsRepo){
+
+
+    public EmployeeServiceImpl(EmployeeRepo employeeRepo, DocumentsRepo documentsRepo, CasesService casesService){
         this.employeeRepo = employeeRepo;
         this.documentsRepo = documentsRepo;
+        this.casesService = casesService;
     }
 
 
@@ -38,10 +45,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepo.addEmployee(newEmployee);
     }
 
+
+    // fixme: sredi sto se desava so cases,createdCases
     @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {
 
         Employee employee = employeeRepo.getEmployeeById(id);
+
+        // delete all docs
         employee.getDocuments().stream().forEach(d -> {
             try {
                 documentsRepo.deleteDocument(d.getID());
@@ -50,11 +61,20 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         });
 
+        // set createdBy in all created cases to null
+        employee.getCreatedCases().stream().forEach(cc ->{
+            try {
+                casesService.setEmployeeCreatorToNull(cc.getID());
+            } catch (CaseNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
         employeeRepo.deleteEmployee(id);
     }
 
 
-
+    // fixme: OK
     @Override
     public void editEmployee(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
         Employee oldEmployee = employeeRepo.getEmployeeById(oldId);
