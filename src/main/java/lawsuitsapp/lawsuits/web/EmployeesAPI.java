@@ -62,9 +62,4 @@ public class EmployeesAPI {
     }
 
 
-
-
-    // TODO: OSTANATI
-    // -- da ima delete employee no so prefrlanje docs na drug employee
-    // -- move cases between employees
 }

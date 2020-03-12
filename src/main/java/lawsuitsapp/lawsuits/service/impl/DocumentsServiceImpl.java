@@ -63,7 +63,7 @@ public class DocumentsServiceImpl implements DocumentsService {
         docToEdit.setData(newDocument.getData());
         docToEdit.setCaseId(newDocument.getCaseId());
         docToEdit.setCreatedBy(newDocument.getCreatedBy());
-        docToEdit.setCourt(newDocument.getCourt());     // todo: new
+        docToEdit.setCourt(newDocument.getCourt());
 
         documentsRepo.addDocument(docToEdit);
     }

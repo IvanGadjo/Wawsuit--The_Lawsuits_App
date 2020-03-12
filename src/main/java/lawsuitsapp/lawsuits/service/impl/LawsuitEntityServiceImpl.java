@@ -38,9 +38,10 @@ public class LawsuitEntityServiceImpl implements LawsuitEntityService {
         lawsuitEntityRepo.addLawsuitEntity(lawsuitEntity);
     }
 
+
+
     // fixme: nigde ne se koristi metodov, valjda ne treba da se stava null na ovie vo case-ot sto im odgovara
     // fixme: ne smee da ima case bez plaintiff i sued
-
     @Override
     public void deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException {
         LawsuitEntity lawsuitEntityToDelete = lawsuitEntityRepo.getLawsuitEntityById(id);

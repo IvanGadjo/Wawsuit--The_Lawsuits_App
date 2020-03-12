@@ -48,7 +48,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    // fixme: sredi sto se desava so cases,createdCases
     @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {
 
@@ -89,7 +88,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 
-    // fixme: OK
     @Override
     public void editEmployee(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
         Employee oldEmployee = employeeRepo.getEmployeeById(oldId);

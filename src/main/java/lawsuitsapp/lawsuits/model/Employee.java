@@ -79,4 +79,14 @@ public class Employee {
         //cases.forEach(c -> System.out.println("YE  "+c.getID()));
     }
 
+
+    @Override
+    public boolean equals(Object otherObject){
+        Employee otherEmployee = (Employee) otherObject;
+        if(this.getID() == otherEmployee.getID())
+            return true;
+        else
+            return false;
+    }
+
 }

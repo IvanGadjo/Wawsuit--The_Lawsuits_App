@@ -51,9 +51,6 @@ public class CasesServiceImpl implements CasesService {
     }
 
 
-    /*
-    fixme: sredi to se desava so lawsuitEntities(mislam ne treba niso za ova da se sredi), employees
-     */
     @Override
     public void deleteCase(int id) throws CaseNotFoundException {
         Case caseToDelete = casesRepo.getCaseById(id);
@@ -163,7 +160,7 @@ public class CasesServiceImpl implements CasesService {
     }
 
 
-    // fixme: OK
+
     @Override
     public void editCase(int oldId, Case editedCase) throws CaseNotFoundException {
         Case oldCase = casesRepo.getCaseById(oldId);
@@ -240,7 +237,6 @@ public class CasesServiceImpl implements CasesService {
     }
 
     // todo: stavi proverka da ne moze da se stai employee sto vekje e staven
-    // fixme
     @Override
     public void addEmployeesToCase(int caseId, List<Integer> employeeIds) throws CaseNotFoundException {
         // get the case
@@ -280,7 +276,6 @@ public class CasesServiceImpl implements CasesService {
     }
 
 
-    // fixme
     @Override
     public void removeEmployeesFromCase(int caseId, List<Integer> employeeIds) throws CaseNotFoundException {
         // get the case
