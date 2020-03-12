@@ -116,4 +116,16 @@ public class CasesAPI {
                                         @RequestParam("newPhase") String newPhase) throws CaseNotFoundException {
         asyncCasesService.changePhaseOfCaseAsync(id,newPhase);
     }
+
+    @PutMapping("/addEmployees/{id}")
+    public void addEmployeesToCase(@PathVariable("id") int caseId,
+                                   @RequestParam("employeeIds")List<Integer> employeeIds) throws CaseNotFoundException {
+        asyncCasesService.addEmployeesToCaseAsync(caseId,employeeIds);
+    }
+
+    @PutMapping("/removeEmployees/{id}")
+    public void removeEmployeesFromCase(@PathVariable("id") int caseId,
+                                        @RequestParam("employeeIds")List<Integer> employeeIds) throws CaseNotFoundException{
+        asyncCasesService.removeEmployeesFromCaseAsync(caseId,employeeIds);
+    }
 }

@@ -37,7 +37,7 @@ public class Case {
 
     // connections
 
-    //fixme    koga ke uncomment vidi konstruktor
+    //fixme
     @JsonIgnore
     @ManyToMany(mappedBy = "cases", fetch = FetchType.EAGER)
     List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
@@ -98,5 +98,26 @@ public class Case {
         documents.add(document);
     }
 
+
+
+
+    public void addEmployee(Employee employee){
+        employees.add(employee);
+    }
+
+    public void removeEmployee(Employee employee){
+        employees.remove(employee);
+    }
+
+
+    // needed for comparison in Employee->remove case
+    @Override
+    public boolean equals(Object otherCaseObj) {
+        Case otherCase = (Case) otherCaseObj;
+        if(this.getID() == otherCase.getID())
+            return true;
+        else
+            return false;
+    }
 
 }

@@ -50,4 +50,12 @@ public class AsyncCasesService {
     public List<Case> getAllCasesByParentCaseIdAsync(int parentCaseId) throws CaseNotFoundException {
         return casesService.getAllCasesByParentCaseId(parentCaseId);
     }
+
+    public void addEmployeesToCaseAsync(int caseId,List<Integer> employees) throws CaseNotFoundException {
+        casesService.addEmployeesToCase(caseId,employees);
+    }
+
+    public void removeEmployeesFromCaseAsync(int caseId,List<Integer> employees) throws CaseNotFoundException {
+        casesService.removeEmployeesFromCase(caseId,employees);
+    }
 }

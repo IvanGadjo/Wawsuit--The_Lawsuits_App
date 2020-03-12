@@ -63,4 +63,20 @@ public class Employee {
         documents.add(document);
     }
 
+
+
+
+    public void addCase(Case theCase){
+        cases.add(theCase);
+    }
+
+    public void removeCase(Case theCase){
+        cases.remove(theCase);
+        //cases.clear();
+
+
+        // print method for debugging
+        //cases.forEach(c -> System.out.println("YE  "+c.getID()));
+    }
+
 }

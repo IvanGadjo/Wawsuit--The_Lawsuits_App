@@ -3,6 +3,7 @@ package lawsuitsapp.lawsuits.service;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 
 import java.util.List;
 
@@ -31,4 +32,10 @@ public interface CasesService {
     void setSuedToNull(int caseId) throws CaseNotFoundException;
 
     void setEmployeeCreatorToNull(int caseId) throws CaseNotFoundException;
+
+    void addEmployeesToCase(int caseId,List<Integer> employeeIds) throws CaseNotFoundException;
+
+    void removeEmployeesFromCase(int caseId,List<Integer> employeeIds) throws CaseNotFoundException;
+
+    List<Case> getCasesByEmployeeId(int employeeId) throws EmployeeNotFoundException;
 }

@@ -3,12 +3,16 @@ package lawsuitsapp.lawsuits.service.impl;
 
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
+import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.repository.CasesRepo;
 import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.service.CasesService;
 import lawsuitsapp.lawsuits.service.DocumentsService;
+import lawsuitsapp.lawsuits.service.EmployeeService;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,11 +24,14 @@ public class CasesServiceImpl implements CasesService {
     CasesRepo casesRepo;
     DocumentsRepo documentsRepo;
     DocumentsService documentsService;
+    EmployeeService employeeService;
 
-    public CasesServiceImpl(CasesRepo casesRepo, DocumentsRepo documentsRepo, DocumentsService documentsService){
+    public CasesServiceImpl(CasesRepo casesRepo, DocumentsRepo documentsRepo, DocumentsService documentsService,
+                            @Lazy EmployeeService employeeService){
         this.casesRepo = casesRepo;
         this.documentsRepo = documentsRepo;
         this.documentsService = documentsService;
+        this.employeeService = employeeService;
     }
 
 
@@ -56,6 +63,8 @@ public class CasesServiceImpl implements CasesService {
         if(caseToDelete.getParentCase() != null)
             isParent = false;
 
+
+
         if(isParent){       // it is parent
             List<Case> childCases = getAllCasesByParentCaseId(id);
 
@@ -73,6 +82,25 @@ public class CasesServiceImpl implements CasesService {
                     e.printStackTrace();
                 }
             });
+
+            // remove case from the cases list of all of the employees working on the case
+            childCases.stream().forEach(cc ->{
+
+                try {
+                    employeeService.getEmployeesByCaseId(cc.getID()).stream().forEach(e ->{
+                        try {
+                            employeeService.removeCaseFromEmployee(e.getID(),cc.getID());
+                        } catch (EmployeeNotFoundException ex) {
+                            ex.printStackTrace();
+                        } catch (CaseNotFoundException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                } catch (CaseNotFoundException e) {
+                    e.printStackTrace();
+                }
+            });
+
 
             // re-read child cases (now without docs)
             childCases = getAllCasesByParentCaseId(id);
@@ -96,6 +124,27 @@ public class CasesServiceImpl implements CasesService {
                 e.printStackTrace();
             }
         });
+
+
+
+
+
+        // re-read the case (now without the child cases)
+        caseToDelete = casesRepo.getCaseById(id);
+
+        // remove the case from the cases list of all the employees working on the case
+        employeeService.getEmployeesByCaseId(caseToDelete.getID()).stream().forEach(e ->{
+            try {
+                employeeService.removeCaseFromEmployee(e.getID(),id);
+            } catch (EmployeeNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (CaseNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+
 
         // delete the case
         casesRepo.deleteCase(id);
@@ -188,6 +237,95 @@ public class CasesServiceImpl implements CasesService {
         Case theCase = getCaseById(caseId);
         theCase.setCreatedBy(null);
         casesRepo.addCase(theCase);
+    }
+
+    // todo: stavi proverka da ne moze da se stai employee sto vekje e staven
+    // fixme
+    @Override
+    public void addEmployeesToCase(int caseId, List<Integer> employeeIds) throws CaseNotFoundException {
+        // get the case
+        Case theCase = getCaseById(caseId);
+
+        // get the employees
+        List<Employee> employees = new ArrayList<>();
+        employeeIds.forEach(ei -> {
+            try {
+                employees.add(employeeService.getEmployeeById(ei));
+            } catch (EmployeeNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+        // add them to the case
+        employees.forEach(e -> theCase.addEmployee(e));
+
+
+
+        /* todo: Pri M-N vrski sekoj update mora da go napravis i na dvete strani, zatoa
+            i kaj employees go stavas case-ot
+         */
+        employees.forEach(e -> {
+            try {
+                employeeService.addCaseToEmployee(e.getID(),theCase.getID());
+            } catch (EmployeeNotFoundException ex) {
+                ex.printStackTrace();
+            } catch (CaseNotFoundException ex) {
+                ex.printStackTrace();
+            }
+        });
+
+
+        // save updated case
+        addCase(theCase);
+    }
+
+
+    // fixme
+    @Override
+    public void removeEmployeesFromCase(int caseId, List<Integer> employeeIds) throws CaseNotFoundException {
+        // get the case
+        Case theCase = getCaseById(caseId);
+
+        // get the employees
+        List<Employee> employees = new ArrayList<>();
+        employeeIds.forEach(ei -> {
+            try {
+                employees.add(employeeService.getEmployeeById(ei));
+            } catch (EmployeeNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+
+
+        // remove them from the case
+        employees.forEach(e -> theCase.removeEmployee(e));
+
+        // because of M-N relationship
+       employees.forEach(e -> {
+           try {
+               employeeService.removeCaseFromEmployee(e.getID(),theCase.getID());
+           } catch (EmployeeNotFoundException ex) {
+               ex.printStackTrace();
+           } catch (CaseNotFoundException ex) {
+               ex.printStackTrace();
+           }
+       });
+
+
+
+
+
+        // save updated case
+        addCase(theCase);
+
+    }
+
+    @Override
+    public List<Case> getCasesByEmployeeId(int employeeId) throws EmployeeNotFoundException {
+        Employee employee = employeeService.getEmployeeById(employeeId);
+
+        return employee.getCases();
     }
 
     // todo: implement
