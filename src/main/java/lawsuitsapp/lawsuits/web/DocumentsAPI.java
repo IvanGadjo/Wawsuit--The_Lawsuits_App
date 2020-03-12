@@ -13,12 +13,21 @@ import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.CourtNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.print.Doc;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -38,35 +47,48 @@ public class DocumentsAPI {
         this.asyncCasesService = asyncCasesService;
     }
 
+    // fixme
+    // todo: smeni go vo get all document names - ne se simnuvaat documents so ova
     @GetMapping
-    public List<Document> getAllDocuments(){
-        return asyncDocumentsService.getAllDocumentsAsync();
+    public List<String> getAllDocumentNames(){
+        return asyncDocumentsService.getAllDocumentsAsync().stream().map(d -> d.getName()).collect(Collectors.toList());
     }
 
-    @GetMapping("/{id}")
-    public Document getDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
-        return asyncDocumentsService.getDocumentByIdAsync(id);
+
+
+    @GetMapping("/downloadDocument/{id}")
+    public ResponseEntity<Resource> downloadDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
+        Document document = asyncDocumentsService.getDocumentByIdAsync(id);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(document.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
+                .body(new ByteArrayResource(document.getData()));
     }
 
     // todo: Ova sig ke treba da go smenis, da go napravis kako fileUpload vo telephones app
-    @PostMapping
-    public void addDocument(@RequestParam("name") String name,
-                            @RequestParam("archiveNumber") int archiveNumber,
+    @PostMapping("/uploadDocument")
+    public void uploadDocument(@RequestParam("archiveNumber") int archiveNumber,
                             @RequestParam("isInput") boolean isInput,
                             @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
-                            @RequestParam("fileType") String fileType,
-                            @RequestParam("data") byte[] data,
+                            @RequestParam("file")MultipartFile file,
                             @RequestParam("employeeId") int employeeId,
                             @RequestParam("courtId") int courtId,
-                            @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException {
+                            @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, IOException {
 
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
         Court court = asyncCourtsService.getCourtByIdAsync(courtId);
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
-        Document newDocument = new Document(name,archiveNumber,isInput,documentDate,fileType,data,employee,court,docCase);
+        // normalize the filename
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+
+        Document newDocument = new Document(fileName,archiveNumber,isInput,documentDate,
+                file.getContentType(),file.getBytes(),employee,court,docCase);
         asyncDocumentsService.addDocumentAsync(newDocument);
     }
+
+
 
 
 
@@ -78,7 +100,6 @@ public class DocumentsAPI {
     // ne moze edit na content, samo na info za documentot
     @PutMapping("/{oldId}")
     public void editDocument(@PathVariable("oldId") int oldId,
-                             @RequestParam("name") String name,
                              @RequestParam("archiveNumber") int archiveNumber,
                              @RequestParam("isInput") boolean isInput,
                              @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
@@ -91,7 +112,7 @@ public class DocumentsAPI {
         Court court = asyncCourtsService.getCourtByIdAsync(courtId);
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
-        Document editDoc = new Document(name,archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),
+        Document editDoc = new Document(oldDoc.getName(),archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),
                 employee,court,docCase);
         asyncDocumentsService.editDocumentAsync(oldId,editDoc);
     }
@@ -106,11 +127,13 @@ public class DocumentsAPI {
         asyncDocumentsService.setCaseIdToNullAsync(id);
     }
 
+    // fixme - spored reactot ke vidis dali treba da vrakja names,ids ili i dvete
     @GetMapping("/ofEmployee/{id}")
     public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId) throws EmployeeNotFoundException {
         return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId);
     }
 
+    // fixme - spored reactot ke vidis dali treba da vrakja names,ids ili i dvete
     @GetMapping("/ofCase/{id}")
     public List<Document> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException {
         return asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId);

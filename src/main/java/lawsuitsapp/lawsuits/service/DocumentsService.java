@@ -26,4 +26,6 @@ public interface DocumentsService {
     void setEmployeeIdToNull(int docId) throws DocumentNotFoundException;
 
     void setCaseIdToNull(int docId) throws DocumentNotFoundException;
+
+
 }
