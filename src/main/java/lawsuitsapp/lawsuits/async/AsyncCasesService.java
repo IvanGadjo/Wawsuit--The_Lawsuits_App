@@ -4,6 +4,7 @@ package lawsuitsapp.lawsuits.async;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
+import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.CasesService;
 import org.springframework.stereotype.Service;
 
@@ -57,5 +58,9 @@ public class AsyncCasesService {
 
     public void removeEmployeesFromCaseAsync(int caseId,List<Integer> employees) throws CaseNotFoundException {
         casesService.removeEmployeesFromCase(caseId,employees);
+    }
+
+    public List<Case> getCasesByEmployeeIdAsync(int employeeId) throws EmployeeNotFoundException {
+        return casesService.getCasesByEmployeeId(employeeId);
     }
 }

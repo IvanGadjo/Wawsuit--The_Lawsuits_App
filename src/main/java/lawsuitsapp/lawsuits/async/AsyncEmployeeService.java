@@ -3,6 +3,7 @@ package lawsuitsapp.lawsuits.async;
 import lawsuitsapp.lawsuits.dataholder.DataHolder;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.EmployeeService;
 import org.springframework.stereotype.Service;
@@ -48,11 +49,7 @@ public class AsyncEmployeeService {
         employeeService.deleteEmployee(id);
     }
 
-
-
-    // todo:
-
-    public void addDocumentToEmployeeAsync(Employee employee, Document docToAdd){
-
+    public List<Employee> getEmployeesByCaseIdAsync(int caseId) throws CaseNotFoundException {
+        return employeeService.getEmployeesByCaseId(caseId);
     }
 }

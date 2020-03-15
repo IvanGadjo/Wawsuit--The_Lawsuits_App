@@ -3,6 +3,7 @@ package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,6 +60,11 @@ public class EmployeesAPI {
                              @RequestParam("role") String role) throws EmployeeNotFoundException {
         Employee editEmployee = new Employee(firstName,lastName,username,password,role);
         asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
+    }
+
+    @GetMapping("/ofCase/{id}")
+    public List<Employee> getAllEmployeesByCaseId(@PathVariable("id") int caseId) throws CaseNotFoundException {
+        return asyncEmployeeService.getEmployeesByCaseIdAsync(caseId);
     }
 
 

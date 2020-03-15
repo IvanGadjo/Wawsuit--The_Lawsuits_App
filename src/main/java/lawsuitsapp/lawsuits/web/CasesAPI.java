@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -127,5 +128,33 @@ public class CasesAPI {
     public void removeEmployeesFromCase(@PathVariable("id") int caseId,
                                         @RequestParam("employeeIds")List<Integer> employeeIds) throws CaseNotFoundException{
         asyncCasesService.removeEmployeesFromCaseAsync(caseId,employeeIds);
+    }
+
+    // returns only case name and case number
+    // important: do not change the method in the service as it is used by other services. If another functionality is
+    // needed, make another method
+    @GetMapping("/byEmployeeId/{id}")
+    public List<String> getAllCasesOfEmployeeById(@PathVariable("id") int employeeId) throws EmployeeNotFoundException {
+        return asyncCasesService.getCasesByEmployeeIdAsync(employeeId).stream()
+                .map(c -> "Name: "+c.getName()+" Number: "+c.getCaseNumber()).collect(Collectors.toList());
+    }
+
+    // fixme: NOT USED
+    @GetMapping("/caseEmployeeInfo")
+    public List<String> getBasicCase_EmployeeInfo(){
+        List<String> resultStrings = new ArrayList<>();
+
+        List<Employee> employees = asyncEmployeeService.getAllEmployeesAsync();
+        for (Employee e: employees){
+            String rez;
+            List<Case> cases = e.getCases();
+            for (Case c: cases){
+                rez = "Employee: "+e.getFirstName()+" "+e.getLastName()+
+                        ", Case: "+c.getName()+" number: "+c.getCaseNumber();
+                resultStrings.add(rez);
+            }
+        }
+
+        return resultStrings;
     }
 }
