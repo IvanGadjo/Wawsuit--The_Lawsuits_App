@@ -13,12 +13,11 @@ import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.CourtNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
+import lawsuitsapp.lawsuits.model.responses.Document_Response_Info;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,11 +25,12 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.print.Doc;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowedHeaders = "*")
 @RequestMapping(path = "/documents")
 public class DocumentsAPI {
 
@@ -47,23 +47,35 @@ public class DocumentsAPI {
         this.asyncCasesService = asyncCasesService;
     }
 
-    // fixme
-    // todo: smeni go vo get all document names - ne se simnuvaat documents so ova
+
     @GetMapping
-    public List<String> getAllDocumentNames(){
-        return asyncDocumentsService.getAllDocumentsAsync().stream().map(d -> d.getName()).collect(Collectors.toList());
+    public List<Document_Response_Info> getAllDocumentsInfo(){
+
+        return asyncDocumentsService.getAllDocumentsAsync().stream().map(d ->{
+            return new Document_Response_Info(d.getID(),d.getName(),d.getArchiveNumber(),d.isInput(),d.getDocumentDate(),
+                    d.getFileType(),d.getCreatedBy().getFirstName()+" "+d.getCreatedBy().getLastName());
+        }).collect(Collectors.toList());
     }
 
 
-
     @GetMapping("/downloadDocument/{id}")
-    public ResponseEntity<Resource> downloadDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
+    public ResponseEntity<byte[]> downloadDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
         Document document = asyncDocumentsService.getDocumentByIdAsync(id);
 
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(document.getFileType()))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
-                .body(new ByteArrayResource(document.getData()));
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.parseMediaType(document.getFileType()))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + document.getName() + "\"")
+//                //.header(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,"*")
+//                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,"GET,POST,PUT,DELETE,OPTIONS")
+//                .header(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS,"Authorization")
+//                .body(new ByteArrayResource(document.getData()));
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType(document.getFileType()));
+        headers.setContentDisposition(ContentDisposition.parse("attachment; filename=\"" + document.getName() + "\""));
+        headers.setAccessControlAllowMethods(Collections.singletonList(HttpMethod.GET));
+        headers.setAccessControlAllowHeaders(Collections.singletonList("Authorization"));
+
+        return new ResponseEntity<>(document.getData(),headers,HttpStatus.OK);
     }
 
     // todo: Ova sig ke treba da go smenis, da go napravis kako fileUpload vo telephones app
@@ -135,7 +147,10 @@ public class DocumentsAPI {
 
     // fixme - spored reactot ke vidis dali treba da vrakja names,ids ili i dvete
     @GetMapping("/ofCase/{id}")
-    public List<Document> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException {
-        return asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId);
+    public List<Document_Response_Info> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException {
+        return asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId).stream().map(d ->{
+            return new Document_Response_Info(d.getID(),d.getName(),d.getArchiveNumber(),d.isInput(),d.getDocumentDate(),
+                    d.getFileType(),d.getCreatedBy().getFirstName()+" "+d.getCreatedBy().getLastName());
+        }).collect(Collectors.toList());
     }
 }
