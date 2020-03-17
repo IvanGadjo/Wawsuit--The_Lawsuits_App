@@ -25,4 +25,6 @@ public interface EmployeeService {
 
     List<Employee> getEmployeesByCaseId(int caseId) throws CaseNotFoundException;
 
+    Employee getEmployeeByUsername(String username);
+
 }

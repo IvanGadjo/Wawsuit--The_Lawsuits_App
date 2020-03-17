@@ -16,4 +16,6 @@ public interface EmployeeRepo {
 
     void deleteEmployee(int id) throws EmployeeNotFoundException;
 
+    Employee getEmployeeByUsername(String username);
+
 }

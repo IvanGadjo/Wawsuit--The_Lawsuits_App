@@ -1,12 +1,14 @@
 package lawsuitsapp.lawsuits.service.jwt;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import lawsuitsapp.lawsuits.model.Credentials;
 import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.repository.EmployeeRepo;
 import lawsuitsapp.lawsuits.repository.jpa.EmployeeRepoJPA;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -47,14 +49,12 @@ public class JWTUserDetailsService implements UserDetailsService{
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 
-        // fixme: Mozebi so ovoj arraylist (ctrl+P) treba da rabotis kooga treba da gledas koj e supervisor a koj lawyer
         return new User(employee.getUsername(),employee.getPassword(),new ArrayList<>());
-
     }
 
 
 
-    public void save(Employee employee){     // napravi vo registerAPI da se zema nov user isto kako vo EmployeesAPI
+    public void save(Employee employee){
         String plainPassword = employee.getPassword();
         String encodedPassword = bcryptEncoder.encode(plainPassword);
         employee.setPassword(encodedPassword);

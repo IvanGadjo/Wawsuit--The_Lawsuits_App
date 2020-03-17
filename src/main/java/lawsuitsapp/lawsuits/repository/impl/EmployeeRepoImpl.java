@@ -39,6 +39,11 @@ public class EmployeeRepoImpl implements EmployeeRepo {
     }
 
     @Override
+    public Employee getEmployeeByUsername(String username) {
+        return employeeRepoJPA.findByUsername(username);
+    }
+
+    @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {
 
         Employee empToDelete = getEmployeeById(id);

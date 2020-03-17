@@ -47,6 +47,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         employeeRepo.addEmployee(newEmployee);
     }
 
+    @Override
+    public Employee getEmployeeByUsername(String username) {
+        return employeeRepo.getEmployeeByUsername(username);
+    }
 
     @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {

@@ -5,6 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import lawsuitsapp.lawsuits.service.EmployeeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -27,6 +30,8 @@ public class JwtTokenUtil implements Serializable{
     @Value("${jwt.secret}")
     private String secret;
 
+    @Autowired
+    EmployeeService employeeService;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -39,7 +44,12 @@ public class JwtTokenUtil implements Serializable{
     //generate token for user
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return doGenerateToken(claims, userDetails.getUsername());
+
+        String role = employeeService.getEmployeeByUsername(userDetails.getUsername()).getRole();
+        claims.put("role",role);      // adding a custom claim, the role of the user,
+                                            // needed in the frontend for conditional rendering
+
+        return doGenerateToken(claims,userDetails.getUsername());
     }
 
 
