@@ -1,5 +1,6 @@
 package lawsuitsapp.lawsuits.web;
 
+import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.service.jwt.JWTUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +9,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import lawsuitsapp.lawsuits.config.JwtTokenUtil;
 import lawsuitsapp.lawsuits.model.auth.JwtRequest;
@@ -40,6 +37,16 @@ public class JwtAuthenticationAPI {
                 .loadUserByUsername(authenticationRequest.getUsername());
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @PostMapping("/register")
+    public void addEmployee(@RequestParam("firstName") String firstName,
+                            @RequestParam("lastName") String lastName,
+                            @RequestParam("username") String username,
+                            @RequestParam("password") String password,
+                            @RequestParam("role") String role){
+        Employee newEmployee = new Employee(firstName,lastName,username,password,role);
+        userDetailsService.save(newEmployee);
     }
 
     private void authenticate(String username, String password) throws Exception {

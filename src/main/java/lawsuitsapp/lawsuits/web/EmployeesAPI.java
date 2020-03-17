@@ -31,6 +31,7 @@ public class EmployeesAPI {
         return asyncEmployeeService.getEmployeeByIdAsync(id);
     }
 
+    // fixme: treba da bide trgnato, ova odi preku JwtAuthenticationAPI
     @PostMapping
     public void addEmployee(@RequestParam("firstName") String firstName,
                             @RequestParam("lastName") String lastName,
