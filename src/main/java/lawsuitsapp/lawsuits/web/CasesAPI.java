@@ -3,6 +3,7 @@ package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncCasesService;
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
+import lawsuitsapp.lawsuits.async.AsyncLawsuitEntityService;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.LawsuitEntity;
@@ -60,7 +61,7 @@ public class CasesAPI {
     // todo: mozebi ne mora sekoj pat da se znae koj e proxy pri vnesuvanje na nov case
 
     @PostMapping
-    public void addCaseToRepo(@RequestParam("caseNumber") int caseNumber,
+    public Case addCaseToRepo(@RequestParam("caseNumber") int caseNumber,
                               @RequestParam("name") String name,
                               @RequestParam("basis") String basis,
                               @RequestParam("value") float value,
@@ -76,6 +77,7 @@ public class CasesAPI {
         LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
         Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById);
 
+
         Case newCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued,creator,proxy);
 
         // set the parent case
@@ -84,10 +86,12 @@ public class CasesAPI {
         }
 
         asyncCasesService.addCaseAsync(newCase);
+
+        return newCase;
     }
 
     @PutMapping("/{id}")
-    public void editCaseInRepo(@PathVariable("id") int oldId,
+    public Case editCaseInRepo(@PathVariable("id") int oldId,
                                @RequestParam("caseNumber") int caseNumber,
                                @RequestParam("name") String name,
                                @RequestParam("basis") String basis,
@@ -104,6 +108,21 @@ public class CasesAPI {
 
         Case editedCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued,creator,proxy);
         asyncCasesService.editCaseAsync(oldId,editedCase);
+
+        return editedCase;
+    }
+
+
+
+
+    @GetMapping("/getPlaintiff/{id}")
+    public LawsuitEntity getPlaintiffOfCase(@PathVariable("id") int id) throws CaseNotFoundException {
+        return asyncCasesService.getCaseByIdAsync(id).getPlaintiff();
+    }
+
+    @GetMapping("/getSued/{id}")
+    public LawsuitEntity getSuedInCase(@PathVariable("id") int id) throws CaseNotFoundException {
+        return asyncCasesService.getCaseByIdAsync(id).getSued();
     }
 
     @PutMapping("/moveDocs")
@@ -118,7 +137,7 @@ public class CasesAPI {
         asyncCasesService.changePhaseOfCaseAsync(id,newPhase);
     }
 
-    @PutMapping("/addEmployees/{id}")
+    @PostMapping("/addEmployees/{id}")
     public void addEmployeesToCase(@PathVariable("id") int caseId,
                                    @RequestParam("employeeIds")List<Integer> employeeIds) throws CaseNotFoundException {
         asyncCasesService.addEmployeesToCaseAsync(caseId,employeeIds);

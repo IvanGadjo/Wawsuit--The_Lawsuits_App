@@ -29,11 +29,12 @@ public class LawsuitEntitiesAPI {
     }
 
     @PostMapping
-    public void addLawsuitEntity(@RequestParam("name") String name,
+    public LawsuitEntity addLawsuitEntity(@RequestParam("name") String name,
                                  @RequestParam("emb")int emb,
                                  @RequestParam("isCompany") boolean isCompany){
         LawsuitEntity lawsuitEntity = new LawsuitEntity(name,emb,isCompany);
         asyncLawsuitEntityService.addLawsuitEntityAsync(lawsuitEntity);
+        return lawsuitEntity;
     }
 
     @PutMapping("/{oldId}")

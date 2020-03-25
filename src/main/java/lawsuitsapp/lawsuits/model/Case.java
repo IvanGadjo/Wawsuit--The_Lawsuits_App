@@ -43,7 +43,7 @@ public class Case {
     List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
 
     //fixme
-    String proxy;              // polnomosnik (ako e drug covek sto ja tuzi posta)
+    String proxy;              // polnomosnik (od drugata firma)
 
     //fixme
     @JsonIgnore
