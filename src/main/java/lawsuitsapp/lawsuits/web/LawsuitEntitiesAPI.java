@@ -38,11 +38,12 @@ public class LawsuitEntitiesAPI {
     }
 
     @PutMapping("/{oldId}")
-    public void editLawsuitEntity(@PathVariable("oldId") int oldId,
+    public LawsuitEntity editLawsuitEntity(@PathVariable("oldId") int oldId,
                                   @RequestParam("name") String name,
                                   @RequestParam("emb")int emb,
                                   @RequestParam("isCompany") boolean isCompany) throws LawsuitEntityNotFoundException {
         LawsuitEntity lawsuitEntity = new LawsuitEntity(name,emb,isCompany);
         asyncLawsuitEntityService.editLawsuitEntityAsync(oldId, lawsuitEntity);
+        return lawsuitEntity;
     }
 }

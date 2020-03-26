@@ -109,6 +109,7 @@ public class DocumentsAPI {
         asyncDocumentsService.deleteDocumentAsync(id);
     }
 
+    // fixme: pri edit createdBy se menuva na editorot, isto kako i edit case
     // ne moze edit na content, samo na info za documentot
     @PutMapping("/{oldId}")
     public void editDocument(@PathVariable("oldId") int oldId,

@@ -52,14 +52,25 @@ public class EmployeesAPI {
 
     // edit employee se odnesuva na editiranje na osnovnite podatoci, dodeka pak izmeni vo odnos na dokumentite
     // se pravat so dr requests (addDoc i deleteDoc od DocAPI)
+//    @PutMapping("/{oldId}")
+//    public void editEmployee(@PathVariable("oldId") int oldId,
+//                             @RequestParam("firstName") String firstName,
+//                             @RequestParam("lastName") String lastName,
+//                             @RequestParam("username") String username,
+//                             @RequestParam("password") String password,
+//                             @RequestParam("role") String role) throws EmployeeNotFoundException {
+//        Employee editEmployee = new Employee(firstName,lastName,username,password,role);
+//        asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
+//    }
     @PutMapping("/{oldId}")
-    public void editEmployee(@PathVariable("oldId") int oldId,
+    public void editBasicEmployeeInfo(@PathVariable("oldId") int oldId,
                              @RequestParam("firstName") String firstName,
                              @RequestParam("lastName") String lastName,
-                             @RequestParam("username") String username,
-                             @RequestParam("password") String password,
                              @RequestParam("role") String role) throws EmployeeNotFoundException {
-        Employee editEmployee = new Employee(firstName,lastName,username,password,role);
+        Employee editEmployee = asyncEmployeeService.getEmployeeByIdAsync(oldId);
+        editEmployee.setFirstName(firstName);
+        editEmployee.setLastName(lastName);
+        editEmployee.setRole(role);
         asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
     }
 
