@@ -53,7 +53,7 @@ public class JwtAuthenticationAPI {
     }
 
     @PutMapping("/changeCredentials/{id}")
-    public void changeCredentialsOfEmployee(@PathVariable("id") int id,
+    public ResponseEntity<?> changeCredentialsOfEmployee(@PathVariable("id") int id,
                                             @RequestParam("username") String newUsername,
                                             @RequestParam("password") String newPassword) throws EmployeeNotFoundException {
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(id);
@@ -61,6 +61,10 @@ public class JwtAuthenticationAPI {
         employee.setPassword(newPassword);
 
         userDetailsService.save(employee);
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(newUsername);
+        final String token = jwtTokenUtil.generateToken(userDetails);
+        return ResponseEntity.ok(new JwtResponse(token));
     }
 
     @PostMapping("/confirmPassword")
