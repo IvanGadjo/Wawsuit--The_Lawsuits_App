@@ -46,4 +46,9 @@ public class LawsuitEntitiesAPI {
         asyncLawsuitEntityService.editLawsuitEntityAsync(oldId, lawsuitEntity);
         return lawsuitEntity;
     }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteLawsuitEntity(@PathVariable("id") int id) throws LawsuitEntityNotFoundException {
+        return asyncLawsuitEntityService.deleteLawsuitEntityAsync(id);
+    }
 }

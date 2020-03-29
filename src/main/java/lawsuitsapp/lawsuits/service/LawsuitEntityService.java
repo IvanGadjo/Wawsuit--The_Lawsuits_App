@@ -13,7 +13,7 @@ public interface LawsuitEntityService {
 
     void addLawsuitEntity(LawsuitEntity lawsuitEntity);
 
-    void deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException;
+    boolean deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException;
 
     void editLawsuitEntity(int oldId, LawsuitEntity newLawsuitEntity) throws LawsuitEntityNotFoundException;
 }

@@ -75,11 +75,12 @@ public class DocumentsAPI {
         headers.setAccessControlAllowMethods(Collections.singletonList(HttpMethod.GET));
         headers.setAccessControlAllowHeaders(Collections.singletonList("Authorization"));
 
+        // todo: Mozebi treba body tuka da bide ByteArrayRessource a ne samo byte[]
         return new ResponseEntity<>(document.getData(),headers,HttpStatus.OK);
     }
 
-    // todo: Ova sig ke treba da go smenis, da go napravis kako fileUpload vo telephones app
-    @PostMapping("/uploadDocument")
+
+    @PostMapping(value = "/uploadDocument", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void uploadDocument(@RequestParam("archiveNumber") int archiveNumber,
                             @RequestParam("isInput") boolean isInput,
                             @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
@@ -99,9 +100,6 @@ public class DocumentsAPI {
                 file.getContentType(),file.getBytes(),employee,court,docCase);
         asyncDocumentsService.addDocumentAsync(newDocument);
     }
-
-
-
 
 
     @DeleteMapping("/{id}")

@@ -43,29 +43,41 @@ public class LawsuitEntityServiceImpl implements LawsuitEntityService {
     // fixme: nigde ne se koristi metodov, valjda ne treba da se stava null na ovie vo case-ot sto im odgovara
     // fixme: ne smee da ima case bez plaintiff i sued
     @Override
-    public void deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException {
-        LawsuitEntity lawsuitEntityToDelete = lawsuitEntityRepo.getLawsuitEntityById(id);
-        // set null to all sued cases
-        lawsuitEntityToDelete.getCasesSued().stream().forEach(sc ->{
-            try {
-                casesService.setSuedToNull(sc.getID());
-            } catch (CaseNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+    public boolean deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException {
 
-        // set null to all plaintiff cases
-        lawsuitEntityToDelete.getCasesPlaintiff().stream().forEach(pc ->{
-            try {
-                casesService.setPlaintiffToNull(pc.getID());
-            } catch (CaseNotFoundException e) {
-                e.printStackTrace();
-            }
-        });
+        // fixme: Ne treba vakva implementacija:
+//        LawsuitEntity lawsuitEntityToDelete = lawsuitEntityRepo.getLawsuitEntityById(id);
+//        // set null to all sued cases
+//        lawsuitEntityToDelete.getCasesSued().stream().forEach(sc ->{
+//            try {
+//                casesService.setSuedToNull(sc.getID());
+//            } catch (CaseNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//
+//        // set null to all plaintiff cases
+//        lawsuitEntityToDelete.getCasesPlaintiff().stream().forEach(pc ->{
+//            try {
+//                casesService.setPlaintiffToNull(pc.getID());
+//            } catch (CaseNotFoundException e) {
+//                e.printStackTrace();
+//            }
+//        });
+//        lawsuitEntityRepo.deleteLawsuitEntity(id);
 
-        lawsuitEntityRepo.deleteLawsuitEntity(id);
+
+        LawsuitEntity lawsuitEntity = lawsuitEntityRepo.getLawsuitEntityById(id);
+
+        if(lawsuitEntity.getCasesSued().size() == 0 && lawsuitEntity.getCasesPlaintiff().size() == 0){
+            lawsuitEntityRepo.deleteLawsuitEntity(id);
+            return true;
+        }
+
+        return false;
     }
 
+    // fixme: Ne se koristi nigde, treba da se koristi vo async, a logikata od tamu da se premesti tuka
     @Override
     public void editLawsuitEntity(int oldId, LawsuitEntity newLawsuitEntity) throws LawsuitEntityNotFoundException {
         LawsuitEntity oldLE = lawsuitEntityRepo.getLawsuitEntityById(oldId);

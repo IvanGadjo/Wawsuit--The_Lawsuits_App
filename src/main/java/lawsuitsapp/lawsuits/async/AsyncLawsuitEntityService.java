@@ -32,8 +32,8 @@ public class AsyncLawsuitEntityService {
     }
 
 
-    public void deleteLawsuitEntityAsync(int id) throws LawsuitEntityNotFoundException {
-        lawsuitEntityService.deleteLawsuitEntity(id);
+    public boolean deleteLawsuitEntityAsync(int id) throws LawsuitEntityNotFoundException {
+        return lawsuitEntityService.deleteLawsuitEntity(id);
     }
 
 
