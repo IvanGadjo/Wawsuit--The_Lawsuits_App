@@ -200,4 +200,9 @@ public class CasesRepoImpl implements CasesRepo {
 
     }
 
+    @Override
+    public List<Case> searchCases(String term) {
+        return casesRepoJPA.searchCases(term);
+    }
+
 }

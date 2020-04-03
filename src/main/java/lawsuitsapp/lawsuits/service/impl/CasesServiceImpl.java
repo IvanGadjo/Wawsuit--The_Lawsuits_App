@@ -323,6 +323,11 @@ public class CasesServiceImpl implements CasesService {
         return employee.getCases();
     }
 
+    @Override
+    public List<Case> searchCases(String term) {
+        return casesRepo.searchCases(term);
+    }
+
     // todo: implement
     @Override
     public void changeParentCaseOfCase(int caseId, int parentCaseId) {

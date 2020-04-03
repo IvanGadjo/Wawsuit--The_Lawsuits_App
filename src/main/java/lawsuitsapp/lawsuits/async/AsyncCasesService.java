@@ -63,4 +63,8 @@ public class AsyncCasesService {
     public List<Case> getCasesByEmployeeIdAsync(int employeeId) throws EmployeeNotFoundException {
         return casesService.getCasesByEmployeeId(employeeId);
     }
+
+    public List<Case> searchCases(String term){
+        return casesService.searchCases(term);
+    }
 }

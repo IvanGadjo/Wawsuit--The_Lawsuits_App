@@ -38,4 +38,6 @@ public interface CasesService {
     void removeEmployeesFromCase(int caseId,List<Integer> employeeIds) throws CaseNotFoundException;
 
     List<Case> getCasesByEmployeeId(int employeeId) throws EmployeeNotFoundException;
+
+    List<Case> searchCases(String term);
 }

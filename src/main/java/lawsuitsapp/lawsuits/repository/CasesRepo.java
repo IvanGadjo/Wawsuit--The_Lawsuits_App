@@ -18,4 +18,6 @@ public interface CasesRepo {
 
     void changeParentCaseOfCase(int caseId, int parentCaseId);
 
+    List<Case> searchCases(String term);
+
 }

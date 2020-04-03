@@ -176,4 +176,10 @@ public class CasesAPI {
 
         return resultStrings;
     }
+
+
+    @GetMapping("/search/{term}")
+    public List<Case> searchCases(@PathVariable("term") String term){
+        return asyncCasesService.searchCases(term);
+    }
 }
