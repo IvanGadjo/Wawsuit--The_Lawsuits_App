@@ -38,4 +38,9 @@ public class LawsuitEntityRepoImpl implements LawsuitEntityRepo {
         LawsuitEntity lawsuitEntityToDelete = getLawsuitEntityById(id);
         lawsuitEntitiesJPA.delete(lawsuitEntityToDelete);
     }
+
+    @Override
+    public List<LawsuitEntity> searchLawsuitEntities(String term) {
+        return lawsuitEntitiesJPA.searchLawsuitEntities(term);
+    }
 }

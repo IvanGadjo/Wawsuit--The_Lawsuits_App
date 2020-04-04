@@ -14,4 +14,6 @@ public interface LawsuitEntityRepo {
     void addLawsuitEntity(LawsuitEntity lawsuitEntity);
 
     void deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException;
+
+    List<LawsuitEntity> searchLawsuitEntities(String term);
 }

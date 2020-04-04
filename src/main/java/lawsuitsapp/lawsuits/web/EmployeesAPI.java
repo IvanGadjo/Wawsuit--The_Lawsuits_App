@@ -2,6 +2,7 @@ package lawsuitsapp.lawsuits.web;
 
 
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
+import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
@@ -50,18 +51,6 @@ public class EmployeesAPI {
     }
 
 
-    // edit employee se odnesuva na editiranje na osnovnite podatoci, dodeka pak izmeni vo odnos na dokumentite
-    // se pravat so dr requests (addDoc i deleteDoc od DocAPI)
-//    @PutMapping("/{oldId}")
-//    public void editEmployee(@PathVariable("oldId") int oldId,
-//                             @RequestParam("firstName") String firstName,
-//                             @RequestParam("lastName") String lastName,
-//                             @RequestParam("username") String username,
-//                             @RequestParam("password") String password,
-//                             @RequestParam("role") String role) throws EmployeeNotFoundException {
-//        Employee editEmployee = new Employee(firstName,lastName,username,password,role);
-//        asyncEmployeeService.editEmployeeAsync(oldId,editEmployee);
-//    }
     @PutMapping("/{oldId}")
     public void editBasicEmployeeInfo(@PathVariable("oldId") int oldId,
                              @RequestParam("firstName") String firstName,
@@ -80,4 +69,8 @@ public class EmployeesAPI {
     }
 
 
+    @GetMapping("/search/{term}")
+    public List<Employee> searchEmployees(@PathVariable("term") String term){
+        return asyncEmployeeService.searchEmployees(term);
+    }
 }

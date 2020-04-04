@@ -16,4 +16,6 @@ public interface LawsuitEntityService {
     boolean deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException;
 
     void editLawsuitEntity(int oldId, LawsuitEntity newLawsuitEntity) throws LawsuitEntityNotFoundException;
+
+    List<LawsuitEntity> searchLawsuitEntities(String term);
 }

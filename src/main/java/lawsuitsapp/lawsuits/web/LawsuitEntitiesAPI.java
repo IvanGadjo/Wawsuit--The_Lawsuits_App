@@ -1,6 +1,7 @@
 package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncLawsuitEntityService;
+import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.LawsuitEntity;
 import lawsuitsapp.lawsuits.model.exceptions.LawsuitEntityNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -50,5 +51,10 @@ public class LawsuitEntitiesAPI {
     @DeleteMapping("/{id}")
     public boolean deleteLawsuitEntity(@PathVariable("id") int id) throws LawsuitEntityNotFoundException {
         return asyncLawsuitEntityService.deleteLawsuitEntityAsync(id);
+    }
+
+    @GetMapping("/search/{term}")
+    public List<LawsuitEntity> searchLawsuitEntities(@PathVariable("term") String term){
+        return asyncLawsuitEntityService.searchLawsuitEntities(term);
     }
 }

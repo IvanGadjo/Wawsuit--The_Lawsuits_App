@@ -45,28 +45,6 @@ public class LawsuitEntityServiceImpl implements LawsuitEntityService {
     @Override
     public boolean deleteLawsuitEntity(int id) throws LawsuitEntityNotFoundException {
 
-        // fixme: Ne treba vakva implementacija:
-//        LawsuitEntity lawsuitEntityToDelete = lawsuitEntityRepo.getLawsuitEntityById(id);
-//        // set null to all sued cases
-//        lawsuitEntityToDelete.getCasesSued().stream().forEach(sc ->{
-//            try {
-//                casesService.setSuedToNull(sc.getID());
-//            } catch (CaseNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//
-//        // set null to all plaintiff cases
-//        lawsuitEntityToDelete.getCasesPlaintiff().stream().forEach(pc ->{
-//            try {
-//                casesService.setPlaintiffToNull(pc.getID());
-//            } catch (CaseNotFoundException e) {
-//                e.printStackTrace();
-//            }
-//        });
-//        lawsuitEntityRepo.deleteLawsuitEntity(id);
-
-
         LawsuitEntity lawsuitEntity = lawsuitEntityRepo.getLawsuitEntityById(id);
 
         if(lawsuitEntity.getCasesSued().size() == 0 && lawsuitEntity.getCasesPlaintiff().size() == 0){
@@ -87,5 +65,10 @@ public class LawsuitEntityServiceImpl implements LawsuitEntityService {
         oldLE.setCompany(newLawsuitEntity.isCompany());
 
         lawsuitEntityRepo.addLawsuitEntity(oldLE);
+    }
+
+    @Override
+    public List<LawsuitEntity> searchLawsuitEntities(String term) {
+        return lawsuitEntityRepo.searchLawsuitEntities(term);
     }
 }

@@ -18,4 +18,6 @@ public interface EmployeeRepo {
 
     Employee getEmployeeByUsername(String username);
 
+    List<Employee> searchEmployees(String term);
+
 }

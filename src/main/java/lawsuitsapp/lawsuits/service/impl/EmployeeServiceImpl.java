@@ -53,6 +53,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
+    public List<Employee> searchEmployees(String term) {
+        return employeeRepo.searchEmployees(term);
+    }
+
+    @Override
     public void deleteEmployee(int id) throws EmployeeNotFoundException {
 
         Employee employee = employeeRepo.getEmployeeById(id);

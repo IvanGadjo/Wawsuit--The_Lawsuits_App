@@ -1,5 +1,6 @@
 package lawsuitsapp.lawsuits.async;
 
+import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.LawsuitEntity;
 import lawsuitsapp.lawsuits.model.exceptions.LawsuitEntityNotFoundException;
 import lawsuitsapp.lawsuits.service.LawsuitEntityService;
@@ -45,5 +46,9 @@ public class AsyncLawsuitEntityService {
         oldLE.setCompany(newLawsuitEntity.isCompany());
 
         lawsuitEntityService.addLawsuitEntity(oldLE);
+    }
+
+    public List<LawsuitEntity> searchLawsuitEntities(String term){
+        return lawsuitEntityService.searchLawsuitEntities(term);
     }
 }
