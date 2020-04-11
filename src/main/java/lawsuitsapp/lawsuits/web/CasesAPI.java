@@ -155,7 +155,7 @@ public class CasesAPI {
     @GetMapping("/byEmployeeId/{id}")
     public List<String> getAllCasesOfEmployeeById(@PathVariable("id") int employeeId) throws EmployeeNotFoundException {
         return asyncCasesService.getCasesByEmployeeIdAsync(employeeId).stream()
-                .map(c -> "Name: "+c.getName()+" Number: "+c.getCaseNumber()).collect(Collectors.toList());
+                .map(c -> "Name: "+c.getName()+", Number: "+c.getCaseNumber()).collect(Collectors.toList());
     }
 
     // fixme: NOT USED
