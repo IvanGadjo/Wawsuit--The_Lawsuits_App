@@ -25,25 +25,23 @@ public class CasesAPI {
 
     AsyncCasesService asyncCasesService;
     AsyncEmployeeService asyncEmployeeService;
+    AsyncLawsuitEntityService asyncLawsuitEntityService;
 
-    // todo: priveremeno samo
-    LawsuitEntitiesJPA lawsuitEntitiesJPA;
-
-    public CasesAPI(AsyncCasesService asyncCasesService, LawsuitEntitiesJPA lawsuitEntitiesJPA,
-                    AsyncEmployeeService asyncEmployeeService){
+    public CasesAPI(AsyncCasesService asyncCasesService,
+                    AsyncEmployeeService asyncEmployeeService, AsyncLawsuitEntityService asyncLawsuitEntityService){
         this.asyncCasesService = asyncCasesService;
-        this.lawsuitEntitiesJPA = lawsuitEntitiesJPA;
         this.asyncEmployeeService = asyncEmployeeService;
+        this.asyncLawsuitEntityService = asyncLawsuitEntityService;
     }
 
     @GetMapping
-    public List<Case> getAllCasesFromRepo(){
-        return asyncCasesService.getAllCasesAsync();
+    public List<Case> getAllCasesFromRepo() throws ExecutionException, InterruptedException {
+        return asyncCasesService.getAllCasesAsync().get();
     }
 
     @GetMapping("/{id}")
-    public Case getCaseByIdFromRepo(@PathVariable("id") int id) throws CaseNotFoundException {
-        return asyncCasesService.getCaseByIdAsync(id);
+    public Case getCaseByIdFromRepo(@PathVariable("id") int id) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        return asyncCasesService.getCaseByIdAsync(id).get();
     }
 
     @DeleteMapping("/{id}")
@@ -52,8 +50,8 @@ public class CasesAPI {
     }
 
     @GetMapping("/childCases/{id}")
-    public List<Case> getAllCasesByParentCaseIdFromRepo(@PathVariable("id") int id) throws CaseNotFoundException {
-        return asyncCasesService.getAllCasesByParentCaseIdAsync(id);
+    public List<Case> getAllCasesByParentCaseIdFromRepo(@PathVariable("id") int id) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        return asyncCasesService.getAllCasesByParentCaseIdAsync(id).get();
     }
 
 
@@ -74,8 +72,8 @@ public class CasesAPI {
                               @RequestParam("createdBy") int createdById,
                               @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
 
-        LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
-        LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId);//LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId);
         Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 
 
@@ -83,7 +81,7 @@ public class CasesAPI {
 
         // set the parent case
         if(!parentCaseId.equals("/")){
-            newCase.setParentCase(asyncCasesService.getCaseByIdAsync(Integer.parseInt(parentCaseId)));
+            newCase.setParentCase(asyncCasesService.getCaseByIdAsync(Integer.parseInt(parentCaseId)).get());
         }
 
         asyncCasesService.addCaseAsync(newCase);
@@ -103,8 +101,10 @@ public class CasesAPI {
                                @RequestParam("suedId") int suedId,
                                @RequestParam("createdBy") int createdById,
                                @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
-        LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
-        LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+
+        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId);
+        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId);
+
         Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 
         Case editedCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued,creator,proxy);
@@ -117,13 +117,13 @@ public class CasesAPI {
 
 
     @GetMapping("/getPlaintiff/{id}")
-    public LawsuitEntity getPlaintiffOfCase(@PathVariable("id") int id) throws CaseNotFoundException {
-        return asyncCasesService.getCaseByIdAsync(id).getPlaintiff();
+    public LawsuitEntity getPlaintiffOfCase(@PathVariable("id") int id) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        return asyncCasesService.getCaseByIdAsync(id).get().getPlaintiff();
     }
 
     @GetMapping("/getSued/{id}")
-    public LawsuitEntity getSuedInCase(@PathVariable("id") int id) throws CaseNotFoundException {
-        return asyncCasesService.getCaseByIdAsync(id).getSued();
+    public LawsuitEntity getSuedInCase(@PathVariable("id") int id) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        return asyncCasesService.getCaseByIdAsync(id).get().getSued();
     }
 
     @PutMapping("/moveDocs")
@@ -154,8 +154,8 @@ public class CasesAPI {
     // important: do not change the method in the service as it is used by other services. If another functionality is
     // needed, make another method
     @GetMapping("/byEmployeeId/{id}")
-    public List<String> getAllCasesOfEmployeeById(@PathVariable("id") int employeeId) throws EmployeeNotFoundException {
-        return asyncCasesService.getCasesByEmployeeIdAsync(employeeId).stream()
+    public List<String> getAllCasesOfEmployeeById(@PathVariable("id") int employeeId) throws EmployeeNotFoundException, ExecutionException, InterruptedException {
+        return asyncCasesService.getCasesByEmployeeIdAsync(employeeId).get().stream()
                 .map(c -> "Name: "+c.getName()+", Number: "+c.getCaseNumber()).collect(Collectors.toList());
     }
 
@@ -180,7 +180,7 @@ public class CasesAPI {
 
 
     @GetMapping("/search/{term}")
-    public List<Case> searchCases(@PathVariable("term") String term){
-        return asyncCasesService.searchCases(term);
+    public List<Case> searchCases(@PathVariable("term") String term) throws ExecutionException, InterruptedException {
+        return asyncCasesService.searchCases(term).get();
     }
 }

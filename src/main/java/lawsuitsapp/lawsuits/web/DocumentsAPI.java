@@ -94,7 +94,7 @@ public class DocumentsAPI {
 
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId).get();
         Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
-        Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
+        Case docCase = asyncCasesService.getCaseByIdAsync(caseId).get();
 
         // normalize the filename
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
@@ -124,7 +124,7 @@ public class DocumentsAPI {
         Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId).get();
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId).get();
         Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
-        Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
+        Case docCase = asyncCasesService.getCaseByIdAsync(caseId).get();
 
         Document editDoc = new Document(oldDoc.getName(),archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),
                 employee,court,docCase);
