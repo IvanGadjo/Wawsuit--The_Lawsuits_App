@@ -6,7 +6,11 @@ import lawsuitsapp.lawsuits.model.Court;
 import lawsuitsapp.lawsuits.model.exceptions.CourtNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -20,14 +24,25 @@ public class CourtsAPI {
     }
 
     @GetMapping
-    public List<Court> getAllCourtsFromRepo(){
-        return asyncCourtsService.getAllCourtsAsync();
+    public List<Court> getAllCourtsFromRepo() throws ExecutionException, InterruptedException {
+        List<Court> result = asyncCourtsService.getAllCourtsAsync().get();
+        return result;
     }
 
     @GetMapping("/{id}")
-    public Court getCourtByIdFromRepo(@PathVariable("id")int id) throws CourtNotFoundException {
-        return asyncCourtsService.getCourtByIdAsync(id);
+    public Court getCourtByIdFromRepo(@PathVariable("id")int id) throws CourtNotFoundException, InterruptedException, ExecutionException {
+
+        CompletableFuture<Court> cfCourt = asyncCourtsService.getCourtByIdAsync(id);
+//        CompletableFuture<Court> cfCourt2 = asyncCourtsService.getCourtByIdAsync(id);
+//        CompletableFuture<Court> cfCourt3 = asyncCourtsService.getCourtByIdAsync(id);
+//        CompletableFuture<Court> cfCourt4 = asyncCourtsService.getCourtByIdAsync(id);
+
+        System.out.println("~~~~~~~~~~~~~~from API thread: "+Thread.currentThread().getName());
+
+        Court c = cfCourt.get();
+        return c;
     }
+
 
     @PostMapping
     public void addCourtToRepo(@RequestParam("name")String name,

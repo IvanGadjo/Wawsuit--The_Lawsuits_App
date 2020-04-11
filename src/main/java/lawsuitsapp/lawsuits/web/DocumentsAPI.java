@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -87,10 +88,11 @@ public class DocumentsAPI {
                             @RequestParam("file")MultipartFile file,
                             @RequestParam("employeeId") int employeeId,
                             @RequestParam("courtId") int courtId,
-                            @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, IOException {
+                            @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, IOException, InterruptedException, ExecutionException {
 
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+//        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
         // normalize the filename
@@ -116,11 +118,12 @@ public class DocumentsAPI {
                              @RequestParam("documentDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate documentDate,
                              @RequestParam("employeeId") int employeeId,
                              @RequestParam("courtId") int courtId,
-                             @RequestParam("caseId") int caseId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException {
+                             @RequestParam("caseId") int caseId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, InterruptedException, ExecutionException {
 
         Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId);
         Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+//        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
         Document editDoc = new Document(oldDoc.getName(),archiveNumber,isInput,documentDate,oldDoc.getFileType(),oldDoc.getData(),
