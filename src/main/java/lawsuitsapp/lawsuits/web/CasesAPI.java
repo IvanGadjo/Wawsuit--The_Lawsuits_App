@@ -72,8 +72,8 @@ public class CasesAPI {
                               @RequestParam("createdBy") int createdById,
                               @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
 
-        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId);//LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
-        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId);
+        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId).get();//LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
+        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId).get();
         Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 
 
@@ -102,8 +102,8 @@ public class CasesAPI {
                                @RequestParam("createdBy") int createdById,
                                @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
 
-        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId);
-        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId);
+        LawsuitEntity plaintiff = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(plaintiffId).get();
+        LawsuitEntity sued = asyncLawsuitEntityService.getLawsuitEntityByIdAsync(suedId).get();
 
         Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 

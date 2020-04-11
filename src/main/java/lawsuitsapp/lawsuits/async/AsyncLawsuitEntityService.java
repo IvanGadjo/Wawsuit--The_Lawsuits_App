@@ -4,9 +4,11 @@ import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.LawsuitEntity;
 import lawsuitsapp.lawsuits.model.exceptions.LawsuitEntityNotFoundException;
 import lawsuitsapp.lawsuits.service.LawsuitEntityService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 @Service
@@ -18,26 +20,29 @@ public class AsyncLawsuitEntityService {
         this.lawsuitEntityService = lawsuitEntityService;
     }
 
-    public List<LawsuitEntity> getAllLawsuitEntitiesAsync() {
-        return lawsuitEntityService.getAllLawsuitEntities();
+    @Async
+    public CompletableFuture<List<LawsuitEntity>> getAllLawsuitEntitiesAsync() {
+        return CompletableFuture.completedFuture(lawsuitEntityService.getAllLawsuitEntities());
     }
 
 
-    public LawsuitEntity getLawsuitEntityByIdAsync(int id) throws LawsuitEntityNotFoundException {
-        return lawsuitEntityService.getLawsuitEntityById(id);
+    @Async
+    public CompletableFuture<LawsuitEntity> getLawsuitEntityByIdAsync(int id) throws LawsuitEntityNotFoundException {
+        return CompletableFuture.completedFuture(lawsuitEntityService.getLawsuitEntityById(id));
     }
 
 
+    @Async
     public void addLawsuitEntityAsync(LawsuitEntity lawsuitEntity) {
         lawsuitEntityService.addLawsuitEntity(lawsuitEntity);
     }
 
-
-    public boolean deleteLawsuitEntityAsync(int id) throws LawsuitEntityNotFoundException {
-        return lawsuitEntityService.deleteLawsuitEntity(id);
+    @Async
+    public CompletableFuture<Boolean> deleteLawsuitEntityAsync(int id) throws LawsuitEntityNotFoundException {
+        return CompletableFuture.completedFuture(lawsuitEntityService.deleteLawsuitEntity(id));
     }
 
-
+    @Async
     public void editLawsuitEntityAsync(int oldId, LawsuitEntity newLawsuitEntity) throws LawsuitEntityNotFoundException {
         LawsuitEntity oldLE = lawsuitEntityService.getLawsuitEntityById(oldId);
 
@@ -48,7 +53,8 @@ public class AsyncLawsuitEntityService {
         lawsuitEntityService.addLawsuitEntity(oldLE);
     }
 
-    public List<LawsuitEntity> searchLawsuitEntities(String term){
-        return lawsuitEntityService.searchLawsuitEntities(term);
+    @Async
+    public CompletableFuture<List<LawsuitEntity>> searchLawsuitEntities(String term){
+        return CompletableFuture.completedFuture(lawsuitEntityService.searchLawsuitEntities(term));
     }
 }

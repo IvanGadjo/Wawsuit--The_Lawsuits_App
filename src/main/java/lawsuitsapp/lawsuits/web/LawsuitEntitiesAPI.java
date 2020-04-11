@@ -7,6 +7,7 @@ import lawsuitsapp.lawsuits.model.exceptions.LawsuitEntityNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -20,13 +21,13 @@ public class LawsuitEntitiesAPI {
     }
 
     @GetMapping
-    public List<LawsuitEntity> getAllLawsuitEntities(){
-        return asyncLawsuitEntityService.getAllLawsuitEntitiesAsync();
+    public List<LawsuitEntity> getAllLawsuitEntities() throws ExecutionException, InterruptedException {
+        return asyncLawsuitEntityService.getAllLawsuitEntitiesAsync().get();
     }
 
     @GetMapping("/{id}")
-    public LawsuitEntity getLawsuitEntityById(@PathVariable("id")int id) throws LawsuitEntityNotFoundException {
-        return asyncLawsuitEntityService.getLawsuitEntityByIdAsync(id);
+    public LawsuitEntity getLawsuitEntityById(@PathVariable("id")int id) throws LawsuitEntityNotFoundException, ExecutionException, InterruptedException {
+        return asyncLawsuitEntityService.getLawsuitEntityByIdAsync(id).get();
     }
 
     @PostMapping
@@ -49,12 +50,12 @@ public class LawsuitEntitiesAPI {
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteLawsuitEntity(@PathVariable("id") int id) throws LawsuitEntityNotFoundException {
-        return asyncLawsuitEntityService.deleteLawsuitEntityAsync(id);
+    public boolean deleteLawsuitEntity(@PathVariable("id") int id) throws LawsuitEntityNotFoundException, ExecutionException, InterruptedException {
+        return asyncLawsuitEntityService.deleteLawsuitEntityAsync(id).get();
     }
 
     @GetMapping("/search/{term}")
-    public List<LawsuitEntity> searchLawsuitEntities(@PathVariable("term") String term){
-        return asyncLawsuitEntityService.searchLawsuitEntities(term);
+    public List<LawsuitEntity> searchLawsuitEntities(@PathVariable("term") String term) throws ExecutionException, InterruptedException {
+        return asyncLawsuitEntityService.searchLawsuitEntities(term).get();
     }
 }
