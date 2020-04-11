@@ -1,6 +1,7 @@
 package lawsuitsapp.lawsuits.web;
 
 import lawsuitsapp.lawsuits.async.AsyncEmployeeService;
+import lawsuitsapp.lawsuits.async.AsyncJwtUserDetailsService;
 import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.jwt.JWTUserDetailsService;
@@ -28,8 +29,10 @@ public class JwtAuthenticationAPI {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+//    @Autowired
+//    private JWTUserDetailsService userDetailsService;
     @Autowired
-    private JWTUserDetailsService userDetailsService;
+    private AsyncJwtUserDetailsService userDetailsService;
 
     @Autowired
     private AsyncEmployeeService asyncEmployeeService;
@@ -38,8 +41,10 @@ public class JwtAuthenticationAPI {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
         authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+//        final UserDetails userDetails = userDetailsService
+//                .loadUserByUsername(authenticationRequest.getUsername());
         final UserDetails userDetails = userDetailsService
-                .loadUserByUsername(authenticationRequest.getUsername());
+                .loadUserByUsernameAsync(authenticationRequest.getUsername()).get();
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }
@@ -51,7 +56,7 @@ public class JwtAuthenticationAPI {
                             @RequestParam("password") String password,
                             @RequestParam("role") String role){
         Employee newEmployee = new Employee(firstName,lastName,username,password,role);
-        userDetailsService.save(newEmployee);
+        userDetailsService.saveUserAsync(newEmployee);
     }
 
     @PutMapping("/changeCredentials/{id}")
@@ -62,9 +67,9 @@ public class JwtAuthenticationAPI {
         employee.setUsername(newUsername);
         employee.setPassword(newPassword);
 
-        userDetailsService.save(employee);
+        userDetailsService.saveUserAsync(employee);
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(newUsername);
+        final UserDetails userDetails = userDetailsService.loadUserByUsernameAsync(newUsername).get();
         final String token = jwtTokenUtil.generateToken(userDetails);
         return ResponseEntity.ok(new JwtResponse(token));
     }
