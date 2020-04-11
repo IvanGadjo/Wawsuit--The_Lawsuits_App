@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @RestController
@@ -71,11 +72,11 @@ public class CasesAPI {
                               @RequestParam("plaintiffId") int plaintiffId,
                               @RequestParam("suedId") int suedId,
                               @RequestParam("createdBy") int createdById,
-                              @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException {
+                              @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
 
         LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
         LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
-        Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById);
+        Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 
 
         Case newCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued,creator,proxy);
@@ -101,10 +102,10 @@ public class CasesAPI {
                                @RequestParam("plaintiffId") int plaintiffId,
                                @RequestParam("suedId") int suedId,
                                @RequestParam("createdBy") int createdById,
-                               @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException {
+                               @RequestParam("proxy") String proxy) throws CaseNotFoundException, LawsuitEntityNotFoundException, EmployeeNotFoundException, ExecutionException, InterruptedException {
         LawsuitEntity plaintiff = lawsuitEntitiesJPA.findById(plaintiffId).orElseThrow(LawsuitEntityNotFoundException::new);
         LawsuitEntity sued = lawsuitEntitiesJPA.findById(suedId).orElseThrow(LawsuitEntityNotFoundException::new);
-        Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById);
+        Employee creator = asyncEmployeeService.getEmployeeByIdAsync(createdById).get();
 
         Case editedCase = new Case(caseNumber,name,basis,value,phase,isExecuted,plaintiff,sued,creator,proxy);
         asyncCasesService.editCaseAsync(oldId,editedCase);
@@ -160,10 +161,10 @@ public class CasesAPI {
 
     // fixme: NOT USED
     @GetMapping("/caseEmployeeInfo")
-    public List<String> getBasicCase_EmployeeInfo(){
+    public List<String> getBasicCase_EmployeeInfo() throws ExecutionException, InterruptedException {
         List<String> resultStrings = new ArrayList<>();
 
-        List<Employee> employees = asyncEmployeeService.getAllEmployeesAsync();
+        List<Employee> employees = asyncEmployeeService.getAllEmployeesAsync().get();
         for (Employee e: employees){
             String rez;
             List<Case> cases = e.getCases();

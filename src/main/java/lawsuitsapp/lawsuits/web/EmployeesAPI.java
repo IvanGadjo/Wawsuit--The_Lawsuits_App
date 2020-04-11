@@ -9,6 +9,7 @@ import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
@@ -22,26 +23,26 @@ public class EmployeesAPI {
     }
 
     @GetMapping
-    public List<Employee> getAllEmployeesFromRepo(){
-        asyncEmployeeService.fillDataBaseAtStart();
-        return asyncEmployeeService.getAllEmployeesAsync();
+    public List<Employee> getAllEmployeesFromRepo() throws ExecutionException, InterruptedException {
+        //asyncEmployeeService.fillDataBaseAtStart();
+        return asyncEmployeeService.getAllEmployeesAsync().get();
     }
 
     @GetMapping("/{id}")
-    public Employee getEmployeeById(@PathVariable int id) throws EmployeeNotFoundException {
-        return asyncEmployeeService.getEmployeeByIdAsync(id);
+    public Employee getEmployeeById(@PathVariable int id) throws EmployeeNotFoundException, ExecutionException, InterruptedException {
+        return asyncEmployeeService.getEmployeeByIdAsync(id).get();
     }
 
-    // fixme: treba da bide trgnato, ova odi preku JwtAuthenticationAPI
-    @PostMapping
-    public void addEmployee(@RequestParam("firstName") String firstName,
-                            @RequestParam("lastName") String lastName,
-                            @RequestParam("username") String username,
-                            @RequestParam("password") String password,
-                            @RequestParam("role") String role){
-        Employee newEmployee = new Employee(firstName,lastName,username,password,role);
-        asyncEmployeeService.addEmployeeAsync(newEmployee);
-    }
+// the logic of this method goes through JwtAuthenticationAPI
+//    @PostMapping
+//    public void addEmployee(@RequestParam("firstName") String firstName,
+//                            @RequestParam("lastName") String lastName,
+//                            @RequestParam("username") String username,
+//                            @RequestParam("password") String password,
+//                            @RequestParam("role") String role){
+//        Employee newEmployee = new Employee(firstName,lastName,username,password,role);
+//        asyncEmployeeService.addEmployeeAsync(newEmployee);
+//    }
 
 
     // delete na employee gi brise site documents sto toj gi ima kreirano
@@ -55,8 +56,8 @@ public class EmployeesAPI {
     public void editBasicEmployeeInfo(@PathVariable("oldId") int oldId,
                              @RequestParam("firstName") String firstName,
                              @RequestParam("lastName") String lastName,
-                             @RequestParam("role") String role) throws EmployeeNotFoundException {
-        Employee editEmployee = asyncEmployeeService.getEmployeeByIdAsync(oldId);
+                             @RequestParam("role") String role) throws EmployeeNotFoundException, ExecutionException, InterruptedException {
+        Employee editEmployee = asyncEmployeeService.getEmployeeByIdAsync(oldId).get();
         editEmployee.setFirstName(firstName);
         editEmployee.setLastName(lastName);
         editEmployee.setRole(role);
@@ -64,13 +65,13 @@ public class EmployeesAPI {
     }
 
     @GetMapping("/ofCase/{id}")
-    public List<Employee> getAllEmployeesByCaseId(@PathVariable("id") int caseId) throws CaseNotFoundException {
-        return asyncEmployeeService.getEmployeesByCaseIdAsync(caseId);
+    public List<Employee> getAllEmployeesByCaseId(@PathVariable("id") int caseId) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        return asyncEmployeeService.getEmployeesByCaseIdAsync(caseId).get();
     }
 
 
     @GetMapping("/search/{term}")
-    public List<Employee> searchEmployees(@PathVariable("term") String term){
-        return asyncEmployeeService.searchEmployees(term);
+    public List<Employee> searchEmployees(@PathVariable("term") String term) throws ExecutionException, InterruptedException {
+        return asyncEmployeeService.searchEmployees(term).get();
     }
 }

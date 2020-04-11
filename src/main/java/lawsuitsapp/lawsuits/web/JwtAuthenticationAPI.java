@@ -17,6 +17,8 @@ import lawsuitsapp.lawsuits.config.JwtTokenUtil;
 import lawsuitsapp.lawsuits.model.auth.JwtRequest;
 import lawsuitsapp.lawsuits.model.auth.JwtResponse;
 
+import java.util.concurrent.ExecutionException;
+
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 //@RequestMapping(path = "/login")
@@ -55,8 +57,8 @@ public class JwtAuthenticationAPI {
     @PutMapping("/changeCredentials/{id}")
     public ResponseEntity<?> changeCredentialsOfEmployee(@PathVariable("id") int id,
                                             @RequestParam("username") String newUsername,
-                                            @RequestParam("password") String newPassword) throws EmployeeNotFoundException {
-        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(id);
+                                            @RequestParam("password") String newPassword) throws EmployeeNotFoundException, ExecutionException, InterruptedException {
+        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(id).get();
         employee.setUsername(newUsername);
         employee.setPassword(newPassword);
 

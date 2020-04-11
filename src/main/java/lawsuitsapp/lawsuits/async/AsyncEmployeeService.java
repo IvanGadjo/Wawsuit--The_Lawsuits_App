@@ -6,10 +6,12 @@ import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
 import lawsuitsapp.lawsuits.service.EmployeeService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class AsyncEmployeeService {
@@ -22,14 +24,17 @@ public class AsyncEmployeeService {
         this.dataHolder = dataHolder;
     }
 
-    public List<Employee> getAllEmployeesAsync(){
-        return employeeService.getAllEmployees();
+    @Async
+    public CompletableFuture<List<Employee>> getAllEmployeesAsync(){
+        return CompletableFuture.completedFuture(employeeService.getAllEmployees());
     }
 
-    public Employee getEmployeeByIdAsync(int id) throws EmployeeNotFoundException {
-        return employeeService.getEmployeeById(id);
+    @Async
+    public CompletableFuture<Employee> getEmployeeByIdAsync(int id) throws EmployeeNotFoundException {
+        return CompletableFuture.completedFuture(employeeService.getEmployeeById(id));
     }
 
+    @Async
     public void addEmployeeAsync(Employee newEmployee){
         employeeService.addEmployee(newEmployee);
     }
@@ -39,21 +44,23 @@ public class AsyncEmployeeService {
         dataHolder.fillDBAtStart();
     }
 
-
+    @Async
     public void editEmployeeAsync(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
         employeeService.editEmployee(oldId,editedEmployee);
     }
 
-
+    @Async
     public void deleteEmployeeAsync(int id) throws EmployeeNotFoundException {
         employeeService.deleteEmployee(id);
     }
 
-    public List<Employee> getEmployeesByCaseIdAsync(int caseId) throws CaseNotFoundException {
-        return employeeService.getEmployeesByCaseId(caseId);
+    @Async
+    public CompletableFuture<List<Employee>> getEmployeesByCaseIdAsync(int caseId) throws CaseNotFoundException {
+        return CompletableFuture.completedFuture(employeeService.getEmployeesByCaseId(caseId));
     }
 
-    public List<Employee> searchEmployees(String term){
-        return employeeService.searchEmployees(term);
+    @Async
+    public CompletableFuture<List<Employee>> searchEmployees(String term){
+        return CompletableFuture.completedFuture(employeeService.searchEmployees(term));
     }
 }

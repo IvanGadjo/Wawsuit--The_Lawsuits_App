@@ -50,18 +50,21 @@ public class DocumentsAPI {
 
 
     @GetMapping
-    public List<Document_Response_Info> getAllDocumentsInfo(){
+    public List<Document_Response_Info> getAllDocumentsInfo() throws ExecutionException, InterruptedException {
 
-        return asyncDocumentsService.getAllDocumentsAsync().stream().map(d ->{
+        List<Document> docs = asyncDocumentsService.getAllDocumentsAsync().get();
+        return docs.stream().map(d ->{
             return new Document_Response_Info(d.getID(),d.getName(),d.getArchiveNumber(),d.isInput(),d.getDocumentDate(),
                     d.getFileType(),d.getCreatedBy().getFirstName()+" "+d.getCreatedBy().getLastName());
         }).collect(Collectors.toList());
+
     }
 
 
     @GetMapping("/downloadDocument/{id}")
-    public ResponseEntity<byte[]> downloadDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException {
-        Document document = asyncDocumentsService.getDocumentByIdAsync(id);
+    public ResponseEntity<byte[]> downloadDocumentById(@PathVariable("id") int id) throws DocumentNotFoundException, ExecutionException, InterruptedException {
+
+        Document document = asyncDocumentsService.getDocumentByIdAsync(id).get();
 
 //        return ResponseEntity.ok()
 //                .contentType(MediaType.parseMediaType(document.getFileType()))
@@ -76,7 +79,6 @@ public class DocumentsAPI {
         headers.setAccessControlAllowMethods(Collections.singletonList(HttpMethod.GET));
         headers.setAccessControlAllowHeaders(Collections.singletonList("Authorization"));
 
-        // todo: Mozebi treba body tuka da bide ByteArrayRessource a ne samo byte[]
         return new ResponseEntity<>(document.getData(),headers,HttpStatus.OK);
     }
 
@@ -90,8 +92,7 @@ public class DocumentsAPI {
                             @RequestParam("courtId") int courtId,
                             @RequestParam("caseId") int caseId) throws EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, IOException, InterruptedException, ExecutionException {
 
-        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-//        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId).get();
         Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
@@ -120,9 +121,8 @@ public class DocumentsAPI {
                              @RequestParam("courtId") int courtId,
                              @RequestParam("caseId") int caseId) throws DocumentNotFoundException, EmployeeNotFoundException, CourtNotFoundException, CaseNotFoundException, InterruptedException, ExecutionException {
 
-        Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId);
-        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId);
-//        Court court = asyncCourtsService.getCourtByIdAsync(courtId);
+        Document oldDoc = asyncDocumentsService.getDocumentByIdAsync(oldId).get();
+        Employee employee = asyncEmployeeService.getEmployeeByIdAsync(employeeId).get();
         Court court = asyncCourtsService.getCourtByIdAsync(courtId).get();
         Case docCase = asyncCasesService.getCaseByIdAsync(caseId);
 
@@ -141,16 +141,18 @@ public class DocumentsAPI {
         asyncDocumentsService.setCaseIdToNullAsync(id);
     }
 
-    // fixme - spored reactot ke vidis dali treba da vrakja names,ids ili i dvete
+
     @GetMapping("/ofEmployee/{id}")
-    public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId) throws EmployeeNotFoundException {
-        return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId);
+    public List<Document> getAllDocumentsOfEmployee(@PathVariable("id")int employeeId) throws EmployeeNotFoundException, ExecutionException, InterruptedException {
+        return asyncDocumentsService.getAllDocumentsOfEmployeeByIdAsync(employeeId).get();
     }
 
-    // fixme - spored reactot ke vidis dali treba da vrakja names,ids ili i dvete
+
     @GetMapping("/ofCase/{id}")
-    public List<Document_Response_Info> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException {
-        return asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId).stream().map(d ->{
+    public List<Document_Response_Info> getAllDocumentsOfCase(@PathVariable("id") int caseId) throws CaseNotFoundException, ExecutionException, InterruptedException {
+        List<Document> docs = asyncDocumentsService.getAllDocumentsOfCaseByIdAsync(caseId).get();
+
+        return docs.stream().map(d ->{
             return new Document_Response_Info(d.getID(),d.getName(),d.getArchiveNumber(),d.isInput(),d.getDocumentDate(),
                     d.getFileType(),d.getCreatedBy().getFirstName()+" "+d.getCreatedBy().getLastName());
         }).collect(Collectors.toList());
