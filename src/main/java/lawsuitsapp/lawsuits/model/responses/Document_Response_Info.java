@@ -20,8 +20,6 @@ public class Document_Response_Info {
 
     String downloadUrl;
 
-    // mozebi treba da dodades:
-    // courtName
 
     public Document_Response_Info(int id,String name,int archiveNumber, boolean isInput, LocalDate documentDate,
                                   String fileType, String employeeCreatorName){

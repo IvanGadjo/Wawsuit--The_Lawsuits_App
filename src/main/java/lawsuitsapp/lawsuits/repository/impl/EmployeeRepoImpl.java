@@ -54,56 +54,11 @@ public class EmployeeRepoImpl implements EmployeeRepo {
         Employee empToDelete = getEmployeeById(id);
         employeeRepoJPA.delete(empToDelete);
 
-        //  brisi gi site docs od toj emp
-//        Employee tmpEmp = getEmployeeById(id);
-//        List<Document> docs = tmpEmp.getDocuments();
-//        for (Document d:docs){
-//            documentsRepoJPA.deleteById(d.getID());
-//        }
-//
-//
-//
-//        Employee employeeToDel = getEmployeeById(id);   // ova e najbitniot del sto tuka na krajot go naogjas emp za brisenje
-//                                                        // da go barase porano, pred da gi izbirses negovite docs ke imase error
-//                    // bidejki taka bi cuval emp sto ne postoi vo db(ima docs koi vekje si gi izbrisal) pa nema da moze
-//                    // da bide izbrisan
-//        employeeRepoJPA.delete(employeeToDel);
+
     }
 
 
-//    @Override
-//    public void editEmployee(int oldId, Employee editedEmployee) throws EmployeeNotFoundException {
-//
-//        // mozebi ova treba da go smenis da bide kako vo prethodnata verzija na lawsuits app
-//        //Employee old = employeeRepoJPA.getOne(oldId);
-//        Employee old = getEmployeeById(oldId);
-//
-//        // get all docs from the emp
-////        List<Document> documents = documentsRepoJPA.findAll().stream().filter(d ->{
-////            return d.getCreatedBy().getID() == oldId;
-////        }).collect(Collectors.toList());
-//        List<Document> documents = old.getDocuments();
-//
-//        // delete all docs
-//        documents.stream().forEach(d -> documentsRepoJPA.delete(d));
-//
-//        // change the documents list to have the new employee as creator
-//        documents.stream().forEach(d -> {
-//            d.setCreatedBy(editedEmployee);
-//        });
-//
-//        // fetch the old employee again (this time is without the deleted docs)
-//        old = getEmployeeById(oldId);
-//
-//        // delete old emp
-//        employeeRepoJPA.delete(old);
-//
-//        // save new emp
-//        employeeRepoJPA.save(editedEmployee);
-//
-//        // save the docs
-//        documentsRepoJPA.saveAll(documents);
-//    }
+
 
 
 }

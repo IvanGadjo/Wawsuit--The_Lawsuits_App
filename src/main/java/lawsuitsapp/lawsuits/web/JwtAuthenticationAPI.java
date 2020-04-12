@@ -29,8 +29,7 @@ public class JwtAuthenticationAPI {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-//    @Autowired
-//    private JWTUserDetailsService userDetailsService;
+
     @Autowired
     private AsyncJwtUserDetailsService userDetailsService;
 

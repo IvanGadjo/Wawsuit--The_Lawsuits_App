@@ -33,9 +33,7 @@ public class CourtsAPI {
     public Court getCourtByIdFromRepo(@PathVariable("id")int id) throws CourtNotFoundException, InterruptedException, ExecutionException {
 
         CompletableFuture<Court> cfCourt = asyncCourtsService.getCourtByIdAsync(id);
-//        CompletableFuture<Court> cfCourt2 = asyncCourtsService.getCourtByIdAsync(id);
-//        CompletableFuture<Court> cfCourt3 = asyncCourtsService.getCourtByIdAsync(id);
-//        CompletableFuture<Court> cfCourt4 = asyncCourtsService.getCourtByIdAsync(id);
+
 
         System.out.println("~~~~~~~~~~~~~~from API thread: "+Thread.currentThread().getName());
 

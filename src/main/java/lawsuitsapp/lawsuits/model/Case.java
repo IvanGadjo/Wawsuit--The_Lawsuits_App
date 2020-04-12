@@ -40,7 +40,7 @@ public class Case {
     //fixme
     @JsonIgnore
     @ManyToMany(mappedBy = "cases", fetch = FetchType.EAGER)
-    List<Employee> employees;       // nullable za vo DB        polnomosnik(od posta)
+    List<Employee> employees;       // nullable za vo DB        polnomosnik(od nasata firma)
 
     //fixme
     String proxy;              // polnomosnik (od drugata firma)

@@ -4,6 +4,7 @@ package lawsuitsapp.lawsuits.service.impl;
 import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
+import lawsuitsapp.lawsuits.model.events.CaseCreatedEvent;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
@@ -12,6 +13,7 @@ import lawsuitsapp.lawsuits.repository.DocumentsRepo;
 import lawsuitsapp.lawsuits.service.CasesService;
 import lawsuitsapp.lawsuits.service.DocumentsService;
 import lawsuitsapp.lawsuits.service.EmployeeService;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +27,15 @@ public class CasesServiceImpl implements CasesService {
     DocumentsRepo documentsRepo;
     DocumentsService documentsService;
     EmployeeService employeeService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public CasesServiceImpl(CasesRepo casesRepo, DocumentsRepo documentsRepo, DocumentsService documentsService,
-                            @Lazy EmployeeService employeeService){
+                            @Lazy EmployeeService employeeService, ApplicationEventPublisher applicationEventPublisher){
         this.casesRepo = casesRepo;
         this.documentsRepo = documentsRepo;
         this.documentsService = documentsService;
         this.employeeService = employeeService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
 
@@ -48,6 +52,7 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public void addCase(Case newCase) {
         casesRepo.addCase(newCase);
+        applicationEventPublisher.publishEvent(new CaseCreatedEvent(newCase));
     }
 
 

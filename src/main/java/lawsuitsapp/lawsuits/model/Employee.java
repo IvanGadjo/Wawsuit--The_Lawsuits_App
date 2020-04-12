@@ -35,7 +35,7 @@ public class Employee {
 
     //fixme
     @OneToMany(mappedBy = "createdBy", fetch = FetchType.EAGER)
-    @Fetch(value = FetchMode.SUBSELECT)             // radi ova se poprava problemot so MultipleBagFetchException https://stackoverflow.com/questions/4334970/hibernate-throws-multiplebagfetchexception-cannot-simultaneously-fetch-multipl
+    @Fetch(value = FetchMode.SUBSELECT)             // fixes problem with MultipleBagFetchException https://stackoverflow.com/questions/4334970/hibernate-throws-multiplebagfetchexception-cannot-simultaneously-fetch-multipl
     List<Case> createdCases;
 
     @OneToMany(mappedBy = "createdBy",fetch = FetchType.EAGER)
@@ -72,11 +72,7 @@ public class Employee {
 
     public void removeCase(Case theCase){
         cases.remove(theCase);
-        //cases.clear();
 
-
-        // print method for debugging
-        //cases.forEach(c -> System.out.println("YE  "+c.getID()));
     }
 
 

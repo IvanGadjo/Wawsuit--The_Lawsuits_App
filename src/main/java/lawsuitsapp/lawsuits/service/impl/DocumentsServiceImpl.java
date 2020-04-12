@@ -17,13 +17,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-/* todo:
-    1. da moze rename na files
-    2. da moze upload na povekje files odednas
-    3. download povekje files
- */
-
-
 @Service
 public class DocumentsServiceImpl implements DocumentsService {
 
