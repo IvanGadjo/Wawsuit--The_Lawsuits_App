@@ -16,4 +16,6 @@ public interface CaseChangeInfoRepo {
     void addChange(CaseChangeInfo change);
 
     void deleteChange(int id);
+
+    List<CaseChangeInfo> getAllChangesOfCase(int caseId);
 }

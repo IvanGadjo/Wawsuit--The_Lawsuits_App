@@ -36,4 +36,10 @@ public class CaseChangeInfoRepoImpl implements CaseChangeInfoRepo {
     public void deleteChange(int id) {
         caseChangeInfoJPA.deleteById(id);
     }
+
+    @Override
+    public List<CaseChangeInfo> getAllChangesOfCase(int caseId) {
+        List<CaseChangeInfo> listCaseChanges = caseChangeInfoJPA.getAllChangesOfCase(caseId);
+        return listCaseChanges;
+    }
 }

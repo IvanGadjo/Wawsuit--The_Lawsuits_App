@@ -36,4 +36,13 @@ public class CaseChangeInfoServiceImpl implements CaseChangeInfoService {
     public void deleteChange(int id) {
         caseChangeInfoRepo.deleteChange(id);
     }
+
+    @Override
+    public void setCaseIdToNull(int caseId) {
+        List<CaseChangeInfo> listCaseChanges = caseChangeInfoRepo.getAllChangesOfCase(caseId);
+        listCaseChanges.stream().forEach(cci -> {
+            cci.setTheCase(null);
+            caseChangeInfoRepo.addChange(cci);
+        });
+    }
 }

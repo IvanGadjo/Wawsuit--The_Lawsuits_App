@@ -14,4 +14,6 @@ public interface CaseChangeInfoService {
     void addChange(CaseChangeInfo change);
 
     void deleteChange(int id);
+
+    void setCaseIdToNull(int caseId);
 }

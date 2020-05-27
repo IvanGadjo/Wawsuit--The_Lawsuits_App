@@ -5,6 +5,7 @@ import lawsuitsapp.lawsuits.model.Case;
 import lawsuitsapp.lawsuits.model.Document;
 import lawsuitsapp.lawsuits.model.Employee;
 import lawsuitsapp.lawsuits.model.events.CaseCreatedEvent;
+import lawsuitsapp.lawsuits.model.events.CaseDeletedEvent;
 import lawsuitsapp.lawsuits.model.exceptions.CaseNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.DocumentNotFoundException;
 import lawsuitsapp.lawsuits.model.exceptions.EmployeeNotFoundException;
@@ -52,6 +53,8 @@ public class CasesServiceImpl implements CasesService {
     @Override
     public void addCase(Case newCase) {
         casesRepo.addCase(newCase);
+
+        // publish event
         applicationEventPublisher.publishEvent(new CaseCreatedEvent(newCase));
     }
 
@@ -145,6 +148,10 @@ public class CasesServiceImpl implements CasesService {
             }
         });
 
+
+        // fixme: Mozebi treba da e uste pogore
+        // publish event
+        applicationEventPublisher.publishEvent(new CaseDeletedEvent(caseToDelete));
 
 
 
