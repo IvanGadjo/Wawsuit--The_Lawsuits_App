@@ -4,6 +4,7 @@ Project built for the subject Web Programming, Faculty of computer science and e
 
 ### Theme
 The goal of this project is to develop an aplication which would aid in managing and tracking lawsuits in some company. It is designated to be used by the lawyers and also their supervisors in the company.
+Every user can create a profile and choose a role - lawyer or supervisor. On the homepage the user can see his/hers profile and change username or password. In the "cases" tab, the user can see all ongoing lawsuit cases, with CRUD actions available for every one of them. By clicking on the button "Employees on this case" the user can see all employees working on it, but he/she can add or remove employees to the case. "Documents" leads to the documents produced by a court or a company related to the respective case (with all CRUD operations available. Moreover by clicking "All employees" the user sees all employees and the lawsuit cases they work on, and "all lawsuit entities" displays every plaintiff/defendant person/company registered in the application.
 
 ### Technologies
 Spring Boot, React JS, MySQL
