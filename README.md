@@ -1,4 +1,18 @@
 # Wawsuit--The_Lawsuits_App
+### *English*
+Project built for the subject Web Programming, Faculty of computer science and engineering, Skopje, North Macedonia.
+
+### Theme
+The goal of this project is to develop an aplication which would aid in managing and tracking lawsuits in some company. It is designated to be used by the lawyers and also their supervisors in the company.
+
+### Technologies
+Spring Boot, React JS, MySQL
+
+
+##
+##
+### *Македонски*
+
 #### Иван Гаџовски, 171095
 Семинарска по предметот веб програмирање, ФИНКИ, зимски семестар 2019/2020
 
@@ -30,6 +44,5 @@ Spring Boot, React JS и MySQL
 Пред да се стартува апликацијата потребно е да се креира MySQL база на податоци:
 - Schema: lawsuitsdb
 - User: root
-- Password: bazigaggio14
 
 Команда за стартување: mvn spring-boot:run
