@@ -1,6 +1,7 @@
 # Wawsuit--The_Lawsuits_App
 ### *English*
 Project built for the subject Web Programming, Faculty of computer science and engineering, Skopje, North Macedonia.
+This is the back-end of the web application. The frontend can be found at https://github.com/IvanGadjo/Wawsuit--The_Lawsuits_App_Front 
 
 ### Theme
 The goal of this project is to develop an aplication which would aid in managing and tracking lawsuits in some company. It is designated to be used by the lawyers and also their supervisors in the company.
